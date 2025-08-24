@@ -8,7 +8,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
-import session from "express-session";
+import session, { Store } from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
 
@@ -40,11 +40,11 @@ export interface IStorage {
   getLease(id: string): Promise<Lease | undefined>;
   createLease(lease: InsertLease): Promise<Lease>;
   
-  sessionStore: session.SessionStore;
+  sessionStore: Store;
 }
 
 export class DatabaseStorage implements IStorage {
-  sessionStore: session.SessionStore;
+  sessionStore: Store;
 
   constructor() {
     this.sessionStore = new PostgresSessionStore({ 
