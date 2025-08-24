@@ -7,12 +7,14 @@ import { AuthProvider } from "./hooks/use-auth";
 import { ProtectedRoute } from "./lib/protected-route";
 import Dashboard from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
+import SpaceRoster from "@/pages/space-roster";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <ProtectedRoute path="/" component={Dashboard} />
+      <ProtectedRoute path="/space-roster" component={SpaceRoster} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
