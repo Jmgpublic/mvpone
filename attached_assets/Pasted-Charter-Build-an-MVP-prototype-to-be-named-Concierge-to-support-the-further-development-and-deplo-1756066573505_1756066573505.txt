@@ -1,0 +1,125 @@
+Charter
+Build an MVP prototype to be named “Concierge” to support the further development and deployment of a complex Property Management Application. Concierge is intended to facilitate many of the workflows, Processes, and Tasks necessary to manage multiple properties.
+
+Primary Data Entities  
+Detail in Data Schema
+Site
+A site or property is subdivided into Spaces,
+Spaces
+Spaces are categorized by SpaceTypes:
+Leases
+Each Valid Lease has at least one Resident, a Space Identifier, a Rental Amount, start and end dates
+Residents
+A database of people distinguished by ‘Type’ and ‘Role’ Fields
+
+This prompt should Create :
+the development environment. 
+Structured in branches to allow autonomous development,
+Github integration
+PostgreSQL database
+Use Schema Document
+
+User Interface of Dashboards.
+A Dashboard for each branch
+Dashboards are for navigation only and should not contain Overview or Analytic data
+Use TBD placeholders for Functions and Features not detail below
+Functions and Features detail will be developed for each branch autonomously
+Make sure any action buttons work correctly
+Branches
+The development branches with some starter functions are as follows:
+Property Management Branch
+Property Management Dashboard
+Panel - Site Definition
+Site Record Maintainence
+Space Roster Management
+Documentation Management
+Panel - Tenant Lifecycle Management
+Onboarding Process
+Tenant CRUD operations
+Waitlist Management
+Lease Management
+Onboarding Checklist
+Offboarding Checklist
+Monthly Cycle
+Rent Accrual
+Payment Processing
+Dunning and Notification Practices
+Off-Boarding Process
+Off-Boarding Checklist
+Account Reconciliation and Closure
+Financial Functions
+Payment processing
+Deposit Processing
+Maintenance Expense Accounting
+Daily, Weekly, Monthly Period Closings
+Panel - Message Management
+Notifications
+News and Events
+Facility Management Branch
+Asset Management Functions
+Inventories of:
+Resident Appliances
+Sensors Installed in Units and Common Areas
+Service and Mechanical Systems
+Preventative Maintenance / Inspection Schedule
+Compiled from Space and Inventory Records
+Service Request Processing
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   Service Request Triage
+Acknowledge New Service Requests
+Suggest a Service Request Resolution Plan
+Create Work Orders as Required
+Ad Hoc Service Requests mapped directly to a Work Order (1:1)
+combined with other Service Requests or Preventive Maintenance or Inspection Events
+Maintenance Execution
+Work Orders assigned and scheduled:
+To Maintenance Staff
+To Resident Volunteer
+To Subcontractor
+Resident Portal Branch
+Messaging
+Display Notifications
+Display News and Events
+Maintain Resident Profile Page
+Service Requests
+Service request submission
+Service Request Status
+Account Information
+Transaction History
+Current Status
+Payment portal
+Site Security Branch
+Security Management Functions
+Guard Shift Scheduling
+Emergency response coordination
+Security Guard Functions
+Security Incident Reporting
+Access control = Visitor Sign-in Log
+Package Handling
+Case Management Branch
+Case Definition and Inventory
+Individual Onboarding  Assessment
+Assess Each Resident for Case Load
+Assign Cases to the appropriate Case Manager
+Scheduling
+Staff Scheduling
+Staff Availability Calendar
+Case Appointment Scheduling
+Self Service Scheduling for clients
+Case Lifecycle
+Case Recognition
+Case Resolution Plan negotiated with client
+Case Follow Up Planning
+Case Progress Records
+Case Resolution Recorded
+Admin & Analytics Branch
+Analytic Functions
+Financial Reporting
+Occupancy Reporting
+Admin Functions
+User and Role management
+Role-based access control
+Reporting
+Occupancy Rate Forecasting
+* Compare the Waitlist Queue and the Lease Expiration Schedule to calculate Occupancy Rates for the next 6 months
+Cash Flow
+Profit and Loss
