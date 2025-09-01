@@ -4,6 +4,8 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 import { Site, Space } from "@shared/schema";
 
 const spaceTypeOptions = [
@@ -101,9 +103,22 @@ export default function SpaceRoster() {
       {/* Body - Table of Spaces */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Spaces ({filteredSpaces.length} {filteredSpaces.length === 1 ? 'space' : 'spaces'})
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>
+              Spaces ({filteredSpaces.length} {filteredSpaces.length === 1 ? 'space' : 'spaces'})
+            </CardTitle>
+            <Button 
+              className="flex items-center gap-2"
+              data-testid="button-add-space"
+              onClick={() => {
+                // TODO: Implement add space functionality
+                console.log("Add space clicked");
+              }}
+            >
+              <Plus className="w-4 h-4" />
+              Add Space
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
