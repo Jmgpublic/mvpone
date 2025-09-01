@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Building2, Settings, Users, Shield, Clipboard, BarChart3, ChevronDown, FileText, MessageSquare, UserCheck, Wrench, Tool, Calendar, AlertTriangle, UserPlus, CreditCard, BarChart } from "lucide-react";
+import { Building2, Settings, Users, Shield, Clipboard, BarChart3, ChevronDown, FileText, MessageSquare, UserCheck, Wrench, Calendar, AlertTriangle, UserPlus, CreditCard, BarChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Branch = 'property-management' | 'facility-management' | 'resident-portal' | 'site-security' | 'case-management' | 'admin-analytics';
@@ -41,7 +41,7 @@ const branches: BranchConfig[] = [
     title: 'Facility Management',
     icon: Settings,
     panels: [
-      { id: 'asset-management', title: 'Asset Management', icon: Tool },
+      { id: 'asset-management', title: 'Asset Management', icon: Settings },
       { id: 'service-requests', title: 'Service Requests', icon: Wrench },
       { id: 'maintenance-execution', title: 'Maintenance Execution', icon: Settings },
     ]
