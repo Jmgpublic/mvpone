@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Building2, Settings, Users, Shield, Clipboard, BarChart3, ChevronDown } from "lucide-react";
+import { Building2, Settings, Users, Shield, Clipboard, BarChart3, ChevronDown, FileText, MessageSquare, UserCheck, Wrench, Tool, Calendar, AlertTriangle, UserPlus, CreditCard, BarChart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type Branch = 'property-management' | 'facility-management' | 'resident-portal' | 'site-security' | 'case-management' | 'admin-analytics';
@@ -9,11 +9,18 @@ interface SidebarProps {
   onBranchChange: (branch: Branch) => void;
 }
 
+interface Panel {
+  id: string;
+  title: string;
+  icon?: React.ElementType;
+  isSubDashboard?: boolean;
+}
+
 interface BranchConfig {
   id: Branch;
   title: string;
   icon: React.ElementType;
-  panels: { id: string; title: string }[];
+  panels: Panel[];
 }
 
 const branches: BranchConfig[] = [
@@ -22,10 +29,11 @@ const branches: BranchConfig[] = [
     title: 'Property Management',
     icon: Building2,
     panels: [
-      { id: 'site-definition', title: 'Site Definition' },
-      { id: 'tenant-lifecycle', title: 'Tenant Lifecycle' },
-      { id: 'financial-functions', title: 'Financial Functions' },
-      { id: 'message-management', title: 'Message Management' },
+      { id: 'overview', title: 'Dashboard Overview', icon: Building2 },
+      { id: 'site-definition', title: 'Site Definition', icon: Building2 },
+      { id: 'documentation', title: 'Documentation & Formage', icon: FileText },
+      { id: 'messaging', title: 'Messaging', icon: MessageSquare },
+      { id: 'tenant-lifecycle', title: 'Tenant Lifecycle', icon: UserCheck, isSubDashboard: true },
     ]
   },
   {
@@ -33,9 +41,9 @@ const branches: BranchConfig[] = [
     title: 'Facility Management',
     icon: Settings,
     panels: [
-      { id: 'asset-management', title: 'Asset Management' },
-      { id: 'service-requests', title: 'Service Requests' },
-      { id: 'maintenance-execution', title: 'Maintenance Execution' },
+      { id: 'asset-management', title: 'Asset Management', icon: Tool },
+      { id: 'service-requests', title: 'Service Requests', icon: Wrench },
+      { id: 'maintenance-execution', title: 'Maintenance Execution', icon: Settings },
     ]
   },
   {
@@ -43,9 +51,9 @@ const branches: BranchConfig[] = [
     title: 'Resident Portal',
     icon: Users,
     panels: [
-      { id: 'messaging', title: 'Messaging' },
-      { id: 'resident-profile', title: 'Resident Profile' },
-      { id: 'account-info', title: 'Account Information' },
+      { id: 'messaging', title: 'Messaging', icon: MessageSquare },
+      { id: 'resident-profile', title: 'Resident Profile', icon: UserCheck },
+      { id: 'account-info', title: 'Account Information', icon: CreditCard },
     ]
   },
   {
@@ -53,9 +61,9 @@ const branches: BranchConfig[] = [
     title: 'Site Security',
     icon: Shield,
     panels: [
-      { id: 'guard-scheduling', title: 'Guard Scheduling' },
-      { id: 'incident-reporting', title: 'Incident Reporting' },
-      { id: 'access-control', title: 'Access Control' },
+      { id: 'guard-scheduling', title: 'Guard Scheduling', icon: Calendar },
+      { id: 'incident-reporting', title: 'Incident Reporting', icon: AlertTriangle },
+      { id: 'access-control', title: 'Access Control', icon: Shield },
     ]
   },
   {
@@ -63,9 +71,9 @@ const branches: BranchConfig[] = [
     title: 'Case Management',
     icon: Clipboard,
     panels: [
-      { id: 'case-definition', title: 'Case Definition' },
-      { id: 'scheduling', title: 'Scheduling' },
-      { id: 'case-lifecycle', title: 'Case Lifecycle' },
+      { id: 'case-definition', title: 'Case Definition', icon: Clipboard },
+      { id: 'scheduling', title: 'Scheduling', icon: Calendar },
+      { id: 'case-lifecycle', title: 'Case Lifecycle', icon: UserPlus },
     ]
   },
   {
@@ -73,9 +81,9 @@ const branches: BranchConfig[] = [
     title: 'Admin & Analytics',
     icon: BarChart3,
     panels: [
-      { id: 'user-management', title: 'User Management' },
-      { id: 'reporting', title: 'Reporting' },
-      { id: 'analytics', title: 'Analytics' },
+      { id: 'user-management', title: 'User Management', icon: Users },
+      { id: 'reporting', title: 'Reporting', icon: FileText },
+      { id: 'analytics', title: 'Analytics', icon: BarChart },
     ]
   },
 ];
@@ -131,17 +139,26 @@ export default function Sidebar({ activeBranch, onBranchChange }: SidebarProps) 
                 
                 {isExpanded && (
                   <div className="mt-2 ml-4 space-y-1">
-                    {branch.panels.map((panel) => (
-                      <a
-                        key={panel.id}
-                        href="#"
-                        className="block p-2 text-sm text-secondary hover:bg-gray-50 hover:text-primary rounded transition-colors"
-                        data-testid={`link-panel-${panel.id}`}
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        {panel.title}
-                      </a>
-                    ))}
+                    {branch.panels.map((panel) => {
+                      const PanelIcon = panel.icon;
+                      return (
+                        <a
+                          key={panel.id}
+                          href="#"
+                          className="flex items-center space-x-2 p-2 text-sm text-secondary hover:bg-gray-50 hover:text-primary rounded transition-colors"
+                          data-testid={`link-panel-${panel.id}`}
+                          onClick={(e) => e.preventDefault()}
+                        >
+                          {PanelIcon && <PanelIcon className="w-4 h-4" />}
+                          <span className="flex-1">{panel.title}</span>
+                          {panel.isSubDashboard && (
+                            <span className="ml-auto text-xs bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded">
+                              Sub
+                            </span>
+                          )}
+                        </a>
+                      );
+                    })}
                   </div>
                 )}
               </div>
