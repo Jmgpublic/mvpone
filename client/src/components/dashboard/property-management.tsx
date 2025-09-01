@@ -1,199 +1,273 @@
-import { Building2, Users, DollarSign, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { Building2, FileText, MessageSquare, Users, Calendar, Bell, FileCheck, User, DollarSign, Edit, ClipboardList } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
+import SiteDefinitionPanel from "./property-management/site-definition-panel";
+import DocumentationPanel from "./property-management/documentation-panel";
+import MessagingPanel from "./property-management/messaging-panel";
+import TenantLifecyclePanel from "./property-management/tenant-lifecycle-panel";
+
+type ActivePanel = 'overview' | 'site-definition' | 'documentation' | 'messaging' | 'tenant-lifecycle';
 
 export default function PropertyManagement() {
+  const [activePanel, setActivePanel] = useState<ActivePanel>('overview');
+
+  const renderPanelContent = () => {
+    switch (activePanel) {
+      case 'site-definition':
+        return <SiteDefinitionPanel />;
+      case 'documentation':
+        return <DocumentationPanel />;
+      case 'messaging':
+        return <MessagingPanel />;
+      case 'tenant-lifecycle':
+        return <TenantLifecyclePanel />;
+      default:
+        return renderOverview();
+    }
+  };
+
+  const renderOverview = () => (
+    <div className="space-y-6">
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-blue-100">
+                <Building2 className="w-6 h-6 text-blue-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Total Sites</p>
+                <p className="text-2xl font-bold text-gray-900" data-testid="stat-total-sites">0</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-green-100">
+                <Users className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Active Tenants</p>
+                <p className="text-2xl font-bold text-gray-900" data-testid="stat-active-tenants">0</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-yellow-100">
+                <ClipboardList className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Pending Applications</p>
+                <p className="text-2xl font-bold text-gray-900" data-testid="stat-pending-applications">0</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <div className="p-3 rounded-full bg-purple-100">
+                <DollarSign className="w-6 h-6 text-purple-600" />
+              </div>
+              <div className="ml-4">
+                <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
+                <p className="text-2xl font-bold text-gray-900" data-testid="stat-monthly-revenue">$0</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Panel Navigation */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Site Definition Panel */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center space-x-2">
+                <Building2 className="w-5 h-5" />
+                <span>Site Definition</span>
+              </CardTitle>
+              <Badge variant="secondary">3 Components</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">Maintain site records, manage space rosters, and handle site documentation</p>
+            <div className="space-y-2">
+              <div className="flex items-center text-sm text-gray-600">
+                <Edit className="w-4 h-4 mr-2" />
+                <span>Maintain Site Record</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <FileText className="w-4 h-4 mr-2" />
+                <span>Site Table - CRUD</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <ClipboardList className="w-4 h-4 mr-2" />
+                <span>Space Roster</span>
+              </div>
+            </div>
+            <Button 
+              className="w-full mt-4" 
+              onClick={() => setActivePanel('site-definition')}
+              data-testid="button-site-definition"
+            >
+              Manage Sites
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Documentation and Formage Panel */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center space-x-2">
+                <FileText className="w-5 h-5" />
+                <span>Documentation & Formage</span>
+              </CardTitle>
+              <Badge variant="secondary">3 Components</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">Manage administrative forms, onboarding checklists, and legal disclosures</p>
+            <div className="space-y-2">
+              <div className="flex items-center text-sm text-gray-600">
+                <FileCheck className="w-4 h-4 mr-2" />
+                <span>Admin Formage</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <ClipboardList className="w-4 h-4 mr-2" />
+                <span>Onboarding Checklist</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <FileText className="w-4 h-4 mr-2" />
+                <span>Onboarding Disclosures</span>
+              </div>
+            </div>
+            <Button 
+              className="w-full mt-4" 
+              onClick={() => setActivePanel('documentation')}
+              data-testid="button-documentation"
+            >
+              Manage Documents
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Messaging Panel */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center space-x-2">
+                <MessageSquare className="w-5 h-5" />
+                <span>Messaging</span>
+              </CardTitle>
+              <Badge variant="secondary">5 Components</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">Handle announcements, calendaring, resident communications, and news</p>
+            <div className="space-y-2">
+              <div className="flex items-center text-sm text-gray-600">
+                <Bell className="w-4 h-4 mr-2" />
+                <span>Announcements</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <Calendar className="w-4 h-4 mr-2" />
+                <span>Calendaring</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <MessageSquare className="w-4 h-4 mr-2" />
+                <span>Notes to Residents</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <FileText className="w-4 h-4 mr-2" />
+                <span>News & Highlights</span>
+              </div>
+            </div>
+            <Button 
+              className="w-full mt-4" 
+              onClick={() => setActivePanel('messaging')}
+              data-testid="button-messaging"
+            >
+              Manage Communications
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Tenant Lifecycle Sub-Dashboard */}
+        <Card className="cursor-pointer hover:shadow-md transition-shadow">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle className="flex items-center space-x-2">
+                <Users className="w-5 h-5" />
+                <span>Tenant Lifecycle</span>
+              </CardTitle>
+              <Badge variant="default">Sub-Dashboard</Badge>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">Complete tenant management from waitlist to lease signing</p>
+            <div className="space-y-2">
+              <div className="flex items-center text-sm text-gray-600">
+                <ClipboardList className="w-4 h-4 mr-2" />
+                <span>Waitlist Management</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <User className="w-4 h-4 mr-2" />
+                <span>Onboarding Process</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <FileCheck className="w-4 h-4 mr-2" />
+                <span>Lease Management</span>
+              </div>
+            </div>
+            <Button 
+              className="w-full mt-4" 
+              onClick={() => setActivePanel('tenant-lifecycle')}
+              data-testid="button-tenant-lifecycle"
+            >
+              Manage Tenant Lifecycle
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-secondary">Property Management Dashboard</h2>
-        <p className="text-gray-600 mt-2">Manage properties, tenants, and financial operations</p>
-      </div>
-
-      {/* Quick Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-blue-100">
-              <Building2 className="w-6 h-6 text-primary" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Properties</p>
-              <p className="text-2xl font-bold text-secondary" data-testid="stat-total-properties">0</p>
-            </div>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-gray-900">Property Management Dashboard</h2>
+            <p className="text-gray-600 mt-2">Comprehensive property and tenant management system</p>
           </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-green-100">
-              <Users className="w-6 h-6 text-accent" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active Tenants</p>
-              <p className="text-2xl font-bold text-secondary" data-testid="stat-active-tenants">0</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-yellow-100">
-              <DollarSign className="w-6 h-6 text-yellow-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Monthly Revenue</p>
-              <p className="text-2xl font-bold text-secondary" data-testid="stat-monthly-revenue">$0</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-          <div className="flex items-center">
-            <div className="p-3 rounded-full bg-red-100">
-              <AlertTriangle className="w-6 h-6 text-red-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Pending Issues</p>
-              <p className="text-2xl font-bold text-secondary" data-testid="stat-pending-issues">0</p>
-            </div>
-          </div>
+          {activePanel !== 'overview' && (
+            <Button 
+              variant="outline" 
+              onClick={() => setActivePanel('overview')}
+              data-testid="button-back-overview"
+            >
+              Back to Overview
+            </Button>
+          )}
         </div>
       </div>
 
-      {/* Navigation Panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Site Definition Panel */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-secondary">Site Definition</h3>
-            <Building2 className="w-5 h-5 text-gray-400" />
-          </div>
-          <p className="text-gray-600 mb-6">Manage site records, space rosters, and documentation</p>
-          <div className="space-y-3">
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-site-records"
-            >
-              <div className="font-medium text-secondary">Site Record Maintenance</div>
-              <div className="text-sm text-gray-500">Add, edit, and manage property records</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-space-roster"
-            >
-              <div className="font-medium text-secondary">Space Roster Management</div>
-              <div className="text-sm text-gray-500">Organize and categorize property spaces</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-documentation"
-            >
-              <div className="font-medium text-secondary">Documentation Management</div>
-              <div className="text-sm text-gray-500">Store and organize property documents</div>
-            </button>
-          </div>
-        </div>
-
-        {/* Tenant Lifecycle Panel */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-secondary">Tenant Lifecycle Management</h3>
-            <Users className="w-5 h-5 text-gray-400" />
-          </div>
-          <p className="text-gray-600 mb-6">Handle tenant onboarding, management, and offboarding processes</p>
-          <div className="space-y-3">
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-onboarding"
-            >
-              <div className="font-medium text-secondary">Onboarding Process</div>
-              <div className="text-sm text-gray-500">TBD: Tenant onboarding workflow</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-tenant-crud"
-            >
-              <div className="font-medium text-secondary">Tenant CRUD Operations</div>
-              <div className="text-sm text-gray-500">Create, update, and manage tenant records</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-lease-management"
-            >
-              <div className="font-medium text-secondary">Lease Management</div>
-              <div className="text-sm text-gray-500">Handle lease agreements and renewals</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-waitlist"
-            >
-              <div className="font-medium text-secondary">Waitlist Management</div>
-              <div className="text-sm text-gray-500">TBD: Manage tenant waiting lists</div>
-            </button>
-          </div>
-        </div>
-
-        {/* Financial Functions Panel */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-secondary">Financial Functions</h3>
-            <DollarSign className="w-5 h-5 text-gray-400" />
-          </div>
-          <p className="text-gray-600 mb-6">Manage payments, expenses, and financial cycles</p>
-          <div className="space-y-3">
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-payment-processing"
-            >
-              <div className="font-medium text-secondary">Payment Processing</div>
-              <div className="text-sm text-gray-500">TBD: Handle rent and deposit payments</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-monthly-cycle"
-            >
-              <div className="font-medium text-secondary">Monthly Cycle</div>
-              <div className="text-sm text-gray-500">TBD: Rent accrual and notifications</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-reconciliation"
-            >
-              <div className="font-medium text-secondary">Account Reconciliation</div>
-              <div className="text-sm text-gray-500">TBD: Period closings and reconciliation</div>
-            </button>
-          </div>
-        </div>
-
-        {/* Message Management Panel */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xl font-semibold text-secondary">Message Management</h3>
-            <AlertTriangle className="w-5 h-5 text-gray-400" />
-          </div>
-          <p className="text-gray-600 mb-6">Handle notifications, news, and resident communications</p>
-          <div className="space-y-3">
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-notifications"
-            >
-              <div className="font-medium text-secondary">Notifications</div>
-              <div className="text-sm text-gray-500">TBD: Send and manage notifications</div>
-            </button>
-            <button 
-              className="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-              data-testid="button-news-events"
-            >
-              <div className="font-medium text-secondary">News and Events</div>
-              <div className="text-sm text-gray-500">TBD: Post community news and events</div>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Activities Section */}
-      <div className="mt-8 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 className="text-xl font-semibold text-secondary mb-4">Recent Activities</h3>
-        <div className="text-center py-8 text-gray-500">
-          <p>No recent activities to display</p>
-        </div>
-      </div>
+      {renderPanelContent()}
     </div>
   );
 }

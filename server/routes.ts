@@ -28,6 +28,25 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.put("/api/sites/:id", async (req, res) => {
+    try {
+      const validatedData = insertSiteSchema.partial().parse(req.body);
+      const site = await storage.updateSite(req.params.id, validatedData);
+      res.json(site);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid site data" });
+    }
+  });
+
+  app.delete("/api/sites/:id", async (req, res) => {
+    try {
+      await storage.deleteSite(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete site" });
+    }
+  });
+
   // Spaces routes
   app.get("/api/spaces", async (req, res) => {
     try {

@@ -27,6 +27,8 @@ export interface IStorage {
   getSites(): Promise<Site[]>;
   getSite(id: string): Promise<Site | undefined>;
   createSite(site: InsertSite): Promise<Site>;
+  updateSite(id: string, site: Partial<InsertSite>): Promise<Site>;
+  deleteSite(id: string): Promise<void>;
   
   // Space methods
   getSpaces(): Promise<Space[]>;
@@ -106,6 +108,19 @@ export class DatabaseStorage implements IStorage {
       .values(insertSite)
       .returning();
     return site;
+  }
+
+  async updateSite(id: string, updateData: Partial<InsertSite>): Promise<Site> {
+    const [site] = await db
+      .update(sites)
+      .set(updateData)
+      .where(eq(sites.id, id))
+      .returning();
+    return site;
+  }
+
+  async deleteSite(id: string): Promise<void> {
+    await db.delete(sites).where(eq(sites.id, id));
   }
 
   async getSpaces(): Promise<Space[]> {
