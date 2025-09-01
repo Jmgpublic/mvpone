@@ -1,10 +1,13 @@
 import { 
-  users, sites, spaces, residents, leases,
+  users, sites, spaces, residents, leases, funders, leaseFunders, revenueEvents,
   type User, type InsertUser,
   type Site, type InsertSite,
   type Space, type InsertSpace,
   type Resident, type InsertResident,
-  type Lease, type InsertLease
+  type Lease, type InsertLease,
+  type Funder, type InsertFunder,
+  type LeaseFunder, type InsertLeaseFunder,
+  type RevenueEvent, type InsertRevenueEvent
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -39,6 +42,23 @@ export interface IStorage {
   getLeases(): Promise<Lease[]>;
   getLease(id: string): Promise<Lease | undefined>;
   createLease(lease: InsertLease): Promise<Lease>;
+  updateLease(id: string, lease: Partial<InsertLease>): Promise<Lease>;
+  
+  // Funder methods
+  getFunders(): Promise<Funder[]>;
+  getFunder(id: string): Promise<Funder | undefined>;
+  createFunder(funder: InsertFunder): Promise<Funder>;
+  
+  // Lease Funder methods
+  getLeaseFunders(leaseId: string): Promise<LeaseFunder[]>;
+  createLeaseFunder(leaseFunder: InsertLeaseFunder): Promise<LeaseFunder>;
+  deleteLeaseFundersByLeaseId(leaseId: string): Promise<void>;
+  
+  // Revenue Event methods
+  getRevenueEvents(): Promise<RevenueEvent[]>;
+  getRevenueEventsByLease(leaseId: string): Promise<RevenueEvent[]>;
+  createRevenueEvent(revenueEvent: InsertRevenueEvent): Promise<RevenueEvent>;
+  deleteRevenueEventsByLeaseId(leaseId: string): Promise<void>;
   
   sessionStore: Store;
 }
@@ -136,6 +156,68 @@ export class DatabaseStorage implements IStorage {
       .values(insertLease)
       .returning();
     return lease;
+  }
+
+  async updateLease(id: string, updateData: Partial<InsertLease>): Promise<Lease> {
+    const [lease] = await db
+      .update(leases)
+      .set(updateData)
+      .where(eq(leases.id, id))
+      .returning();
+    return lease;
+  }
+
+  async getFunders(): Promise<Funder[]> {
+    return await db.select().from(funders);
+  }
+
+  async getFunder(id: string): Promise<Funder | undefined> {
+    const [funder] = await db.select().from(funders).where(eq(funders.id, id));
+    return funder || undefined;
+  }
+
+  async createFunder(insertFunder: InsertFunder): Promise<Funder> {
+    const [funder] = await db
+      .insert(funders)
+      .values(insertFunder)
+      .returning();
+    return funder;
+  }
+
+  async getLeaseFunders(leaseId: string): Promise<LeaseFunder[]> {
+    return await db.select().from(leaseFunders).where(eq(leaseFunders.leaseId, leaseId));
+  }
+
+  async createLeaseFunder(insertLeaseFunder: InsertLeaseFunder): Promise<LeaseFunder> {
+    const [leaseFunder] = await db
+      .insert(leaseFunders)
+      .values(insertLeaseFunder)
+      .returning();
+    return leaseFunder;
+  }
+
+  async deleteLeaseFundersByLeaseId(leaseId: string): Promise<void> {
+    await db.delete(leaseFunders).where(eq(leaseFunders.leaseId, leaseId));
+  }
+
+  async getRevenueEvents(): Promise<RevenueEvent[]> {
+    return await db.select().from(revenueEvents);
+  }
+
+  async getRevenueEventsByLease(leaseId: string): Promise<RevenueEvent[]> {
+    return await db.select().from(revenueEvents).where(eq(revenueEvents.leaseId, leaseId));
+  }
+
+  async createRevenueEvent(insertRevenueEvent: InsertRevenueEvent): Promise<RevenueEvent> {
+    const [revenueEvent] = await db
+      .insert(revenueEvents)
+      .values(insertRevenueEvent)
+      .returning();
+    return revenueEvent;
+  }
+
+  async deleteRevenueEventsByLeaseId(leaseId: string): Promise<void> {
+    await db.delete(revenueEvents).where(eq(revenueEvents.leaseId, leaseId));
   }
 }
 

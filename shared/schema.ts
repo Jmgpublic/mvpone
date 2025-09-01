@@ -54,8 +54,37 @@ export const leases = pgTable("leases", {
   residentId: varchar("resident_id").notNull().references(() => residents.id),
   spaceId: varchar("space_id").notNull().references(() => spaces.id),
   rentalAmount: decimal("rental_amount", { precision: 10, scale: 2 }).notNull(),
+  marketValue: decimal("market_value", { precision: 10, scale: 2 }).notNull(),
   startDate: timestamp("start_date").notNull(),
   endDate: timestamp("end_date").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Funders table
+export const funders = pgTable("funders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Lease funders (junction table for lease funding sources)
+export const leaseFunders = pgTable("lease_funders", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  leaseId: varchar("lease_id").notNull().references(() => leases.id),
+  funderId: varchar("funder_id").notNull().references(() => funders.id),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Revenue events table
+export const revenueEvents = pgTable("revenue_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  leaseId: varchar("lease_id").notNull().references(() => leases.id),
+  funderId: varchar("funder_id").notNull().references(() => funders.id),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  eventDate: timestamp("event_date").notNull(),
+  month: text("month").notNull(), // Format: "2025-06"
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -80,7 +109,7 @@ export const residentsRelations = relations(residents, ({ one, many }) => ({
   leases: many(leases),
 }));
 
-export const leasesRelations = relations(leases, ({ one }) => ({
+export const leasesRelations = relations(leases, ({ one, many }) => ({
   resident: one(residents, {
     fields: [leases.residentId],
     references: [residents.id],
@@ -88,6 +117,35 @@ export const leasesRelations = relations(leases, ({ one }) => ({
   space: one(spaces, {
     fields: [leases.spaceId],
     references: [spaces.id],
+  }),
+  leaseFunders: many(leaseFunders),
+  revenueEvents: many(revenueEvents),
+}));
+
+export const fundersRelations = relations(funders, ({ many }) => ({
+  leaseFunders: many(leaseFunders),
+  revenueEvents: many(revenueEvents),
+}));
+
+export const leaseFundersRelations = relations(leaseFunders, ({ one }) => ({
+  lease: one(leases, {
+    fields: [leaseFunders.leaseId],
+    references: [leases.id],
+  }),
+  funder: one(funders, {
+    fields: [leaseFunders.funderId],
+    references: [funders.id],
+  }),
+}));
+
+export const revenueEventsRelations = relations(revenueEvents, ({ one }) => ({
+  lease: one(leases, {
+    fields: [revenueEvents.leaseId],
+    references: [leases.id],
+  }),
+  funder: one(funders, {
+    fields: [revenueEvents.funderId],
+    references: [funders.id],
   }),
 }));
 
@@ -121,6 +179,21 @@ export const insertLeaseSchema = createInsertSchema(leases).omit({
   createdAt: true,
 });
 
+export const insertFunderSchema = createInsertSchema(funders).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertLeaseFunderSchema = createInsertSchema(leaseFunders).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertRevenueEventSchema = createInsertSchema(revenueEvents).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -132,3 +205,9 @@ export type Resident = typeof residents.$inferSelect;
 export type InsertResident = z.infer<typeof insertResidentSchema>;
 export type Lease = typeof leases.$inferSelect;
 export type InsertLease = z.infer<typeof insertLeaseSchema>;
+export type Funder = typeof funders.$inferSelect;
+export type InsertFunder = z.infer<typeof insertFunderSchema>;
+export type LeaseFunder = typeof leaseFunders.$inferSelect;
+export type InsertLeaseFunder = z.infer<typeof insertLeaseFunderSchema>;
+export type RevenueEvent = typeof revenueEvents.$inferSelect;
+export type InsertRevenueEvent = z.infer<typeof insertRevenueEventSchema>;

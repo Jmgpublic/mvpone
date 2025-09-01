@@ -27,6 +27,12 @@ export default function Header() {
                 Space Roster
               </Button>
             </Link>
+            <Link href="/lease-entry">
+              <Button variant="outline" size="sm" data-testid="button-lease-entry">
+                <Building className="w-4 h-4 mr-2" />
+                Lease Entry
+              </Button>
+            </Link>
             <div className="flex items-center space-x-2 text-secondary">
               <User className="w-5 h-5" />
               <span data-testid="text-username">{user?.username}</span>
