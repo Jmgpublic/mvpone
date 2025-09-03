@@ -24,13 +24,13 @@ export default function Header() {
             <Link href="/space-roster">
               <Button variant="outline" size="sm" data-testid="button-space-roster">
                 <Building className="w-4 h-4 mr-2" />
-                Space Roster
+                Spaces
               </Button>
             </Link>
             <Link href="/lease-entry">
               <Button variant="outline" size="sm" data-testid="button-lease-entry">
                 <Building className="w-4 h-4 mr-2" />
-                Lease Entry
+                Leases
               </Button>
             </Link>
             <div className="flex items-center space-x-2 text-secondary">
