@@ -121,23 +121,6 @@ export default function Sidebar({ activeBranch, onBranchChange }: SidebarProps) 
     <nav className="w-64 bg-white shadow-lg border-r border-gray-200 overflow-y-auto">
       <div className="p-4">
         <div className="space-y-4">
-          {/* Direct Page Links */}
-          <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3">Quick Access</h3>
-            {directPages.map((page) => {
-              const Icon = page.icon;
-              return (
-                <Link key={page.id} href={page.route}>
-                  <div className="flex items-center space-x-3 p-3 text-secondary hover:bg-gray-100 hover:text-primary rounded-lg transition-colors cursor-pointer"
-                       data-testid={`link-${page.id}`}>
-                    <Icon className="w-5 h-5" />
-                    <span className="font-medium">{page.title}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-
           {/* Dashboard Branches */}
           <div className="space-y-2">
             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3">Dashboard Modules</h3>
