@@ -79,11 +79,18 @@ export function registerRoutes(app: Express): Server {
 
   app.post("/api/spaces", async (req, res) => {
     try {
+      console.log("Received space data:", req.body);
       const validatedData = insertSpaceSchema.parse(req.body);
+      console.log("Validated data:", validatedData);
       const space = await storage.createSpace(validatedData);
       res.status(201).json(space);
     } catch (error) {
-      res.status(400).json({ message: "Invalid space data" });
+      console.error("Space creation error:", error);
+      if (error instanceof Error) {
+        res.status(400).json({ message: "Invalid space data", details: error.message });
+      } else {
+        res.status(400).json({ message: "Invalid space data" });
+      }
     }
   });
 
