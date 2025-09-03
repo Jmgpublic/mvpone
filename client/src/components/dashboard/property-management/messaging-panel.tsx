@@ -119,13 +119,7 @@ export default function MessagingPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-bold text-gray-900">Messaging & Communications</h3>
-        <Button data-testid="button-create-message">
-          <Plus className="w-4 h-4 mr-2" />
-          New Message
-        </Button>
-      </div>
+      <h3 className="text-2xl font-bold text-gray-900">Messaging & Communications</h3>
 
       <Tabs defaultValue="announcements" className="w-full">
         <TabsList className="grid w-full grid-cols-5">
@@ -142,75 +136,9 @@ export default function MessagingPanel() {
             {/* Quick Create and Stats */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Bell className="w-5 h-5" />
-                    <span>Announcements Overview</span>
-                  </div>
-                  <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button onClick={() => setCurrentMessageType('announcement')} data-testid="button-create-announcement">
-                        <Plus className="w-4 h-4 mr-2" />
-                        New Announcement
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Create New Announcement</DialogTitle>
-                        <DialogDescription>
-                          Send an important message to residents about property updates or notices.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <div className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Title</label>
-                          <Input
-                            placeholder="Enter announcement title"
-                            value={announcementTitle}
-                            onChange={(e) => setAnnouncementTitle(e.target.value)}
-                            data-testid="input-announcement-title"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Message</label>
-                          <Textarea 
-                            placeholder="Write your announcement here..."
-                            rows={4}
-                            value={newAnnouncement}
-                            onChange={(e) => setNewAnnouncement(e.target.value)}
-                            data-testid="textarea-announcement-content"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Recipients</label>
-                          <Select defaultValue="all">
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="all">All Residents</SelectItem>
-                              <SelectItem value="building-a">Building A Only</SelectItem>
-                              <SelectItem value="building-b">Building B Only</SelectItem>
-                              <SelectItem value="specific">Specific Units</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div className="flex space-x-2">
-                          <Button onClick={handleCreateMessage} data-testid="button-send-announcement">
-                            <Send className="w-4 h-4 mr-2" />
-                            Send Now
-                          </Button>
-                          <Button variant="outline" data-testid="button-schedule-announcement">
-                            <Clock className="w-4 h-4 mr-2" />
-                            Schedule
-                          </Button>
-                          <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                            Cancel
-                          </Button>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
+                <CardTitle className="flex items-center space-x-2">
+                  <Bell className="w-5 h-5" />
+                  <span>Announcements Overview</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>

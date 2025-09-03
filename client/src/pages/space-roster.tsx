@@ -103,22 +103,9 @@ export default function SpaceRoster() {
       {/* Body - Table of Spaces */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle>
-              Spaces ({filteredSpaces.length} {filteredSpaces.length === 1 ? 'space' : 'spaces'})
-            </CardTitle>
-            <Button 
-              className="flex items-center gap-2"
-              data-testid="button-add-space"
-              onClick={() => {
-                // TODO: Implement add space functionality
-                console.log("Add space clicked");
-              }}
-            >
-              <Plus className="w-4 h-4" />
-              Add Space
-            </Button>
-          </div>
+          <CardTitle>
+            Spaces ({filteredSpaces.length} {filteredSpaces.length === 1 ? 'space' : 'spaces'})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <Table>

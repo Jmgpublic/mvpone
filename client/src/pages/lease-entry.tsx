@@ -313,13 +313,7 @@ export default function LeaseEntry() {
           {/* Body - Funders Table */}
           <Card>
             <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle>Funding Sources</CardTitle>
-                <Button type="button" onClick={addFunder} size="sm" data-testid="button-add-funder">
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Funder
-                </Button>
-              </div>
+              <CardTitle>Funding Sources</CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
