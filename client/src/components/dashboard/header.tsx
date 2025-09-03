@@ -21,18 +21,6 @@ export default function Header() {
             </span>
           </div>
           <div className="flex items-center space-x-4">
-            <Link href="/space-roster">
-              <Button variant="outline" size="sm" data-testid="button-space-roster">
-                <Building className="w-4 h-4 mr-2" />
-                Spaces
-              </Button>
-            </Link>
-            <Link href="/lease-entry">
-              <Button variant="outline" size="sm" data-testid="button-lease-entry">
-                <Building className="w-4 h-4 mr-2" />
-                Leases
-              </Button>
-            </Link>
             <div className="flex items-center space-x-2 text-secondary">
               <User className="w-5 h-5" />
               <span data-testid="text-username">{user?.username}</span>
