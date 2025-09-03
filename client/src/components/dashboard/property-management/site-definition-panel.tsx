@@ -120,15 +120,14 @@ export default function SiteDefinitionPanel() {
         </div>
       </div>
 
-      <Tabs defaultValue="site-table" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="site-table">Site Table - CRUD</TabsTrigger>
-          <TabsTrigger value="site-records">Maintain Site Record</TabsTrigger>
+      <Tabs defaultValue="site-management" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="site-management">Site Management</TabsTrigger>
           <TabsTrigger value="space-roster">Space Roster</TabsTrigger>
         </TabsList>
 
-        {/* Site Table - CRUD */}
-        <TabsContent value="site-table" className="space-y-4">
+        {/* Site Management - Combined CRUD and Form */}
+        <TabsContent value="site-management" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -194,10 +193,8 @@ export default function SiteDefinitionPanel() {
               )}
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Maintain Site Record */}
-        <TabsContent value="site-records" className="space-y-4">
+          
+          {/* Add/Edit Site Form */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
