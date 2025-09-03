@@ -162,6 +162,9 @@ export const insertUserSchema = createInsertSchema(users).omit({
 export const insertSiteSchema = createInsertSchema(sites).omit({
   id: true,
   createdAt: true,
+}).extend({
+  name: z.string().min(1, "Site name is required"),
+  address: z.string().min(1, "Address is required"),
 });
 
 export const insertSpaceSchema = createInsertSchema(spaces).omit({
