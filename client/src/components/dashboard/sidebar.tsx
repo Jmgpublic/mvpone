@@ -26,10 +26,7 @@ interface BranchConfig {
   panels: Panel[];
 }
 
-const directPages = [
-  { id: 'spaces', title: 'Spaces', icon: Building2, route: '/space-roster' },
-  { id: 'leases', title: 'Leases', icon: FileInput, route: '/lease-entry' },
-];
+
 
 const branches: BranchConfig[] = [
   {
@@ -123,7 +120,7 @@ export default function Sidebar({ activeBranch, onBranchChange }: SidebarProps) 
         <div className="space-y-4">
           {/* Dashboard Branches */}
           <div className="space-y-2">
-            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3">Dashboard Modules</h3>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-3">Dashboards</h3>
           {branches.map((branch) => {
             const Icon = branch.icon;
             const isActive = activeBranch === branch.id;
