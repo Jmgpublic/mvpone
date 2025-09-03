@@ -163,7 +163,7 @@ export default function SiteDefinitionPanel() {
       <Tabs defaultValue="site-management" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="site-management">Site Management</TabsTrigger>
-          <TabsTrigger value="space-roster">Space Roster</TabsTrigger>
+          <TabsTrigger value="space-roster">Spaces</TabsTrigger>
         </TabsList>
 
         {/* Site Management - Combined CRUD and Form */}

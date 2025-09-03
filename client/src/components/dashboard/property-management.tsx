@@ -104,7 +104,7 @@ export default function PropertyManagement() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">Maintain site records, manage space rosters, and handle site documentation</p>
+            <p className="text-gray-600 mb-4">Maintain site records, manage spaces, and handle site documentation</p>
             <div className="space-y-2">
               <div className="flex items-center text-sm text-gray-600">
                 <Edit className="w-4 h-4 mr-2" />
@@ -116,7 +116,7 @@ export default function PropertyManagement() {
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <ClipboardList className="w-4 h-4 mr-2" />
-                <span>Space Roster</span>
+                <span>Spaces</span>
               </div>
             </div>
             <Button 
