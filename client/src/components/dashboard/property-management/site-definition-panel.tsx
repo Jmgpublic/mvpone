@@ -13,17 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, Edit, Trash2, Building, Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Site, Space, insertSiteSchema, type InsertSite } from "@shared/schema";
+import { Site, Space, SpaceType, insertSiteSchema, type InsertSite } from "@shared/schema";
 import { Link } from "wouter";
 
-const spaceTypeOptions = [
-  { value: "all", label: "All Types" },
-  { value: "studio", label: "Studio" },
-  { value: "1_bedroom", label: "1 Bedroom" },
-  { value: "2_bedroom", label: "2 Bedroom" },
-  { value: "3_bedroom", label: "3 Bedroom" },
-  { value: "common_area", label: "Common Area" },
-];
 
 export default function SiteDefinitionPanel() {
   const [editingSite, setEditingSite] = useState<Site | null>(null);
@@ -43,11 +35,16 @@ export default function SiteDefinitionPanel() {
     queryKey: ["/api/spaces"],
   });
 
+  // Fetch space types data
+  const { data: spaceTypes = [] } = useQuery<SpaceType[]>({
+    queryKey: ["/api/space-types"],
+  });
+
   // Filter spaces based on selected criteria
   const filteredSpaces = useMemo(() => {
     return spaces.filter((space) => {
       const siteMatch = selectedSite === "all" || space.siteId === selectedSite;
-      const typeMatch = selectedSpaceType === "all" || space.type === selectedSpaceType;
+      const typeMatch = selectedSpaceType === "all" || space.spaceTypeId === selectedSpaceType;
       return siteMatch && typeMatch;
     });
   }, [spaces, selectedSite, selectedSpaceType]);
@@ -58,10 +55,19 @@ export default function SiteDefinitionPanel() {
     return site?.name || "Unknown Site";
   };
 
-  // Format space type for display
-  const formatSpaceType = (type: string) => {
-    return spaceTypeOptions.find(opt => opt.value === type)?.label || type;
+  // Get space type name for a space
+  const getSpaceTypeName = (spaceTypeId: string) => {
+    const spaceType = spaceTypes.find(st => st.id === spaceTypeId);
+    return spaceType?.name || "Unknown Type";
   };
+
+  // Create space type options for dropdown
+  const spaceTypeOptions = useMemo(() => {
+    return [
+      { value: "all", label: "All Types" },
+      ...spaceTypes.map(st => ({ value: st.id, label: st.name }))
+    ];
+  }, [spaceTypes]);
 
   // Form setup
   const form = useForm<InsertSite>({
@@ -374,7 +380,7 @@ export default function SiteDefinitionPanel() {
                         <TableCell>{getSiteName(space.siteId)}</TableCell>
                         <TableCell>{space.identifier}</TableCell>
                         <TableCell>
-                          <Badge variant="secondary">{formatSpaceType(space.type)}</Badge>
+                          <Badge variant="secondary">{getSpaceTypeName(space.spaceTypeId)}</Badge>
                         </TableCell>
                       </TableRow>
                     ))
@@ -404,7 +410,7 @@ export default function SiteDefinitionPanel() {
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Type</label>
                       <p>
-                        <Badge variant="secondary">{formatSpaceType(selectedSpace.type)}</Badge>
+                        <Badge variant="secondary">{getSpaceTypeName(selectedSpace.spaceTypeId)}</Badge>
                       </p>
                     </div>
                   </div>

@@ -6,23 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { Site, Space } from "@shared/schema";
+import { Site, Space, SpaceType } from "@shared/schema";
 
-const spaceTypeOptions = [
-  { value: "all", label: "All Types" },
-  { value: "studio", label: "Studio" },
-  { value: "1_bedroom", label: "1 Bedroom" },
-  { value: "2_bedroom", label: "2 Bedroom" },
-  { value: "3_bedroom", label: "3 Bedroom" },
-  { value: "common_area", label: "Common Area" },
-];
 
 export default function SpaceRoster() {
   const [selectedSite, setSelectedSite] = useState<string>("all");
   const [selectedSpaceType, setSelectedSpaceType] = useState<string>("all");
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
 
-  // Fetch sites and spaces data
+  // Fetch sites, spaces, and space types data
   const { data: sites = [] } = useQuery<Site[]>({
     queryKey: ["/api/sites"],
   });
@@ -31,11 +23,15 @@ export default function SpaceRoster() {
     queryKey: ["/api/spaces"],
   });
 
+  const { data: spaceTypes = [] } = useQuery<SpaceType[]>({
+    queryKey: ["/api/space-types"],
+  });
+
   // Filter spaces based on selected criteria
   const filteredSpaces = useMemo(() => {
     return spaces.filter((space) => {
       const siteMatch = selectedSite === "all" || space.siteId === selectedSite;
-      const typeMatch = selectedSpaceType === "all" || space.type === selectedSpaceType;
+      const typeMatch = selectedSpaceType === "all" || space.spaceTypeId === selectedSpaceType;
       return siteMatch && typeMatch;
     });
   }, [spaces, selectedSite, selectedSpaceType]);
@@ -46,10 +42,19 @@ export default function SpaceRoster() {
     return site?.name || "Unknown Site";
   };
 
-  // Format space type for display
-  const formatSpaceType = (type: string) => {
-    return spaceTypeOptions.find(opt => opt.value === type)?.label || type;
+  // Get space type name for a space
+  const getSpaceTypeName = (spaceTypeId: string) => {
+    const spaceType = spaceTypes.find(st => st.id === spaceTypeId);
+    return spaceType?.name || "Unknown Type";
   };
+
+  // Create space type options for dropdown
+  const spaceTypeOptions = useMemo(() => {
+    return [
+      { value: "all", label: "All Types" },
+      ...spaceTypes.map(st => ({ value: st.id, label: st.name }))
+    ];
+  }, [spaceTypes]);
 
   return (
     <div className="container mx-auto p-6 space-y-6">
@@ -138,7 +143,7 @@ export default function SpaceRoster() {
                     <TableCell>{getSiteName(space.siteId)}</TableCell>
                     <TableCell>{space.identifier}</TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{formatSpaceType(space.type)}</Badge>
+                      <Badge variant="secondary">{getSpaceTypeName(space.spaceTypeId)}</Badge>
                     </TableCell>
                   </TableRow>
                 ))
@@ -168,7 +173,7 @@ export default function SpaceRoster() {
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Type</label>
                   <p>
-                    <Badge variant="secondary">{formatSpaceType(selectedSpace.type)}</Badge>
+                    <Badge variant="secondary">{getSpaceTypeName(selectedSpace.spaceTypeId)}</Badge>
                   </p>
                 </div>
               </div>

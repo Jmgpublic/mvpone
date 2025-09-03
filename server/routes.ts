@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
-import { insertSiteSchema, insertSpaceSchema, insertResidentSchema, insertLeaseSchema, insertFunderSchema, insertLeaseFunderSchema, insertRevenueEventSchema } from "@shared/schema";
+import { insertSiteSchema, insertSpaceTypeSchema, insertSpaceSchema, insertResidentSchema, insertLeaseSchema, insertFunderSchema, insertLeaseFunderSchema, insertRevenueEventSchema } from "@shared/schema";
 
 export function registerRoutes(app: Express): Server {
   // Authentication routes
@@ -44,6 +44,26 @@ export function registerRoutes(app: Express): Server {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete site" });
+    }
+  });
+
+  // Space Types routes
+  app.get("/api/space-types", async (req, res) => {
+    try {
+      const spaceTypes = await storage.getSpaceTypes();
+      res.json(spaceTypes);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch space types" });
+    }
+  });
+
+  app.post("/api/space-types", async (req, res) => {
+    try {
+      const validatedData = insertSpaceTypeSchema.parse(req.body);
+      const spaceType = await storage.createSpaceType(validatedData);
+      res.status(201).json(spaceType);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid space type data" });
     }
   });
 

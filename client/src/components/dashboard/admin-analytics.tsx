@@ -17,6 +17,7 @@ import {
   insertLeaseSchema,
   type Site,
   type Space,
+  type SpaceType,
   type Resident,
   type Lease
 } from "@shared/schema";
@@ -41,6 +42,10 @@ export default function AdminAnalytics() {
     queryKey: ["/api/leases"],
   });
 
+  const { data: spaceTypes = [] } = useQuery<SpaceType[]>({
+    queryKey: ["/api/space-types"],
+  });
+
   // Site form
   const siteForm = useForm({
     resolver: zodResolver(insertSiteSchema),
@@ -55,7 +60,7 @@ export default function AdminAnalytics() {
     resolver: zodResolver(insertSpaceSchema),
     defaultValues: {
       identifier: "",
-      type: "studio" as const,
+      spaceTypeId: "",
       siteId: "",
     },
   });
@@ -295,7 +300,7 @@ export default function AdminAnalytics() {
                 />
                 <FormField
                   control={spaceForm.control}
-                  name="type"
+                  name="spaceTypeId"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Space Type</FormLabel>
@@ -306,11 +311,11 @@ export default function AdminAnalytics() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="studio">Studio</SelectItem>
-                          <SelectItem value="1_bedroom">1 Bedroom</SelectItem>
-                          <SelectItem value="2_bedroom">2 Bedroom</SelectItem>
-                          <SelectItem value="3_bedroom">3 Bedroom</SelectItem>
-                          <SelectItem value="common_area">Common Area</SelectItem>
+                          {spaceTypes.map((spaceType) => (
+                            <SelectItem key={spaceType.id} value={spaceType.id}>
+                              {spaceType.name}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />

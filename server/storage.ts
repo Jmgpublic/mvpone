@@ -1,7 +1,8 @@
 import { 
-  users, sites, spaces, residents, leases, funders, leaseFunders, revenueEvents,
+  users, sites, spaceTypes, spaces, residents, leases, funders, leaseFunders, revenueEvents,
   type User, type InsertUser,
   type Site, type InsertSite,
+  type SpaceType, type InsertSpaceType,
   type Space, type InsertSpace,
   type Resident, type InsertResident,
   type Lease, type InsertLease,
@@ -29,6 +30,11 @@ export interface IStorage {
   createSite(site: InsertSite): Promise<Site>;
   updateSite(id: string, site: Partial<InsertSite>): Promise<Site>;
   deleteSite(id: string): Promise<void>;
+  
+  // Space Type methods
+  getSpaceTypes(): Promise<SpaceType[]>;
+  getSpaceType(id: string): Promise<SpaceType | undefined>;
+  createSpaceType(spaceType: InsertSpaceType): Promise<SpaceType>;
   
   // Space methods
   getSpaces(): Promise<Space[]>;
@@ -121,6 +127,23 @@ export class DatabaseStorage implements IStorage {
 
   async deleteSite(id: string): Promise<void> {
     await db.delete(sites).where(eq(sites.id, id));
+  }
+
+  async getSpaceTypes(): Promise<SpaceType[]> {
+    return await db.select().from(spaceTypes);
+  }
+
+  async getSpaceType(id: string): Promise<SpaceType | undefined> {
+    const [spaceType] = await db.select().from(spaceTypes).where(eq(spaceTypes.id, id));
+    return spaceType || undefined;
+  }
+
+  async createSpaceType(insertSpaceType: InsertSpaceType): Promise<SpaceType> {
+    const [spaceType] = await db
+      .insert(spaceTypes)
+      .values(insertSpaceType)
+      .returning();
+    return spaceType;
   }
 
   async getSpaces(): Promise<Space[]> {

@@ -1,5 +1,5 @@
 import { sql, relations } from "drizzle-orm";
-import { pgTable, text, varchar, decimal, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, decimal, timestamp, pgEnum, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -7,7 +7,6 @@ import { z } from "zod";
 export const userRoleEnum = pgEnum('user_role', ['admin', 'property_manager', 'facility_manager', 'resident', 'security', 'case_manager']);
 export const residentTypeEnum = pgEnum('resident_type', ['primary_tenant', 'co_tenant', 'authorized_occupant']);
 export const residentRoleEnum = pgEnum('resident_role', ['leaseholder', 'emergency_contact', 'guarantor']);
-export const spaceTypeEnum = pgEnum('space_type', ['studio', '1_bedroom', '2_bedroom', '3_bedroom', 'common_area']);
 
 // Users table for authentication
 export const users = pgTable("users", {
@@ -27,11 +26,20 @@ export const sites = pgTable("sites", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Space Types table
+export const spaceTypes = pgTable("space_types", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  code: text("code").notNull().unique(),
+  name: text("name").notNull(),
+  rentable: boolean("rentable").notNull().default(false),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Spaces table
 export const spaces = pgTable("spaces", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   identifier: text("identifier").notNull(),
-  type: spaceTypeEnum("type").notNull(),
+  spaceTypeId: varchar("space_type_id").notNull().references(() => spaceTypes.id),
   siteId: varchar("site_id").notNull().references(() => sites.id),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
@@ -93,10 +101,18 @@ export const sitesRelations = relations(sites, ({ many }) => ({
   spaces: many(spaces),
 }));
 
+export const spaceTypesRelations = relations(spaceTypes, ({ many }) => ({
+  spaces: many(spaces),
+}));
+
 export const spacesRelations = relations(spaces, ({ one, many }) => ({
   site: one(sites, {
     fields: [spaces.siteId],
     references: [sites.id],
+  }),
+  spaceType: one(spaceTypes, {
+    fields: [spaces.spaceTypeId],
+    references: [spaceTypes.id],
   }),
   leases: many(leases),
 }));
@@ -159,6 +175,11 @@ export const insertUserSchema = createInsertSchema(users).omit({
   createdAt: true,
 });
 
+export const insertSpaceTypeSchema = createInsertSchema(spaceTypes).omit({
+  id: true,
+  createdAt: true,
+});
+
 export const insertSiteSchema = createInsertSchema(sites).omit({
   id: true,
   createdAt: true,
@@ -202,6 +223,8 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Site = typeof sites.$inferSelect;
 export type InsertSite = z.infer<typeof insertSiteSchema>;
+export type SpaceType = typeof spaceTypes.$inferSelect;
+export type InsertSpaceType = z.infer<typeof insertSpaceTypeSchema>;
 export type Space = typeof spaces.$inferSelect;
 export type InsertSpace = z.infer<typeof insertSpaceSchema>;
 export type Resident = typeof residents.$inferSelect;
