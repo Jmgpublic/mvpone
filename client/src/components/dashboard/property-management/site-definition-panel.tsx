@@ -182,7 +182,6 @@ export default function SiteDefinitionPanel() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Site ID</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Address</TableHead>
                       <TableHead>Created</TableHead>
@@ -192,14 +191,13 @@ export default function SiteDefinitionPanel() {
                   <TableBody>
                     {sites.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={5} className="text-center text-muted-foreground">
+                        <TableCell colSpan={4} className="text-center text-muted-foreground">
                           No sites found. Create your first site below.
                         </TableCell>
                       </TableRow>
                     ) : (
                       sites.map((site) => (
                         <TableRow key={site.id}>
-                          <TableCell className="font-mono text-sm">{site.id}</TableCell>
                           <TableCell className="font-medium">{site.name}</TableCell>
                           <TableCell>{site.address}</TableCell>
                           <TableCell>{new Date(site.createdAt).toLocaleDateString()}</TableCell>
