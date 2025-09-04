@@ -1,5 +1,6 @@
 import { 
   users, sites, spaceTypes, spaces, residents, leases, funders, leaseFunders, revenueEvents,
+  serviceRequests, serviceOrders, workOrders, serviceRequestServiceOrders, serviceRequestWorkOrders,
   type User, type InsertUser,
   type Site, type InsertSite,
   type SpaceType, type InsertSpaceType,
@@ -8,7 +9,12 @@ import {
   type Lease, type InsertLease,
   type Funder, type InsertFunder,
   type LeaseFunder, type InsertLeaseFunder,
-  type RevenueEvent, type InsertRevenueEvent
+  type RevenueEvent, type InsertRevenueEvent,
+  type ServiceRequest, type InsertServiceRequest,
+  type ServiceOrder, type InsertServiceOrder,
+  type WorkOrder, type InsertWorkOrder,
+  type ServiceRequestServiceOrder, type InsertServiceRequestServiceOrder,
+  type ServiceRequestWorkOrder, type InsertServiceRequestWorkOrder
 } from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
@@ -67,6 +73,40 @@ export interface IStorage {
   getRevenueEventsByLease(leaseId: string): Promise<RevenueEvent[]>;
   createRevenueEvent(revenueEvent: InsertRevenueEvent): Promise<RevenueEvent>;
   deleteRevenueEventsByLeaseId(leaseId: string): Promise<void>;
+  
+  // Service Request methods
+  getServiceRequests(): Promise<ServiceRequest[]>;
+  getServiceRequest(id: string): Promise<ServiceRequest | undefined>;
+  getServiceRequestsByResident(residentId: string): Promise<ServiceRequest[]>;
+  getServiceRequestsBySpace(spaceId: string): Promise<ServiceRequest[]>;
+  getServiceRequestsByStatus(status: string): Promise<ServiceRequest[]>;
+  createServiceRequest(serviceRequest: InsertServiceRequest): Promise<ServiceRequest>;
+  updateServiceRequest(id: string, serviceRequest: Partial<InsertServiceRequest>): Promise<ServiceRequest>;
+  
+  // Service Order methods
+  getServiceOrders(): Promise<ServiceOrder[]>;
+  getServiceOrder(id: string): Promise<ServiceOrder | undefined>;
+  getServiceOrdersByAssignedStaff(staffId: string): Promise<ServiceOrder[]>;
+  getServiceOrdersByStatus(status: string): Promise<ServiceOrder[]>;
+  createServiceOrder(serviceOrder: InsertServiceOrder): Promise<ServiceOrder>;
+  updateServiceOrder(id: string, serviceOrder: Partial<InsertServiceOrder>): Promise<ServiceOrder>;
+  
+  // Work Order methods
+  getWorkOrders(): Promise<WorkOrder[]>;
+  getWorkOrder(id: string): Promise<WorkOrder | undefined>;
+  getWorkOrdersByStatus(status: string): Promise<WorkOrder[]>;
+  createWorkOrder(workOrder: InsertWorkOrder): Promise<WorkOrder>;
+  updateWorkOrder(id: string, workOrder: Partial<InsertWorkOrder>): Promise<WorkOrder>;
+  
+  // Service Request to Service Order junction methods
+  linkServiceRequestToServiceOrder(serviceRequestId: string, serviceOrderId: string): Promise<ServiceRequestServiceOrder>;
+  getServiceOrdersForRequest(serviceRequestId: string): Promise<ServiceOrder[]>;
+  getServiceRequestsForServiceOrder(serviceOrderId: string): Promise<ServiceRequest[]>;
+  
+  // Service Request to Work Order junction methods
+  linkServiceRequestToWorkOrder(serviceRequestId: string, workOrderId: string): Promise<ServiceRequestWorkOrder>;
+  getWorkOrdersForRequest(serviceRequestId: string): Promise<WorkOrder[]>;
+  getServiceRequestsForWorkOrder(workOrderId: string): Promise<ServiceRequest[]>;
   
   sessionStore: Store;
 }
@@ -256,6 +296,165 @@ export class DatabaseStorage implements IStorage {
 
   async deleteRevenueEventsByLeaseId(leaseId: string): Promise<void> {
     await db.delete(revenueEvents).where(eq(revenueEvents.leaseId, leaseId));
+  }
+
+  // Service Request methods
+  async getServiceRequests(): Promise<ServiceRequest[]> {
+    return await db.select().from(serviceRequests);
+  }
+
+  async getServiceRequest(id: string): Promise<ServiceRequest | undefined> {
+    const [serviceRequest] = await db.select().from(serviceRequests).where(eq(serviceRequests.id, id));
+    return serviceRequest || undefined;
+  }
+
+  async getServiceRequestsByResident(residentId: string): Promise<ServiceRequest[]> {
+    return await db.select().from(serviceRequests).where(eq(serviceRequests.residentId, residentId));
+  }
+
+  async getServiceRequestsBySpace(spaceId: string): Promise<ServiceRequest[]> {
+    return await db.select().from(serviceRequests).where(eq(serviceRequests.spaceId, spaceId));
+  }
+
+  async getServiceRequestsByStatus(status: string): Promise<ServiceRequest[]> {
+    return await db.select().from(serviceRequests).where(eq(serviceRequests.status, status as any));
+  }
+
+  async createServiceRequest(insertServiceRequest: InsertServiceRequest): Promise<ServiceRequest> {
+    const [serviceRequest] = await db
+      .insert(serviceRequests)
+      .values(insertServiceRequest)
+      .returning();
+    return serviceRequest;
+  }
+
+  async updateServiceRequest(id: string, updateData: Partial<InsertServiceRequest>): Promise<ServiceRequest> {
+    const [serviceRequest] = await db
+      .update(serviceRequests)
+      .set(updateData)
+      .where(eq(serviceRequests.id, id))
+      .returning();
+    return serviceRequest;
+  }
+
+  // Service Order methods
+  async getServiceOrders(): Promise<ServiceOrder[]> {
+    return await db.select().from(serviceOrders);
+  }
+
+  async getServiceOrder(id: string): Promise<ServiceOrder | undefined> {
+    const [serviceOrder] = await db.select().from(serviceOrders).where(eq(serviceOrders.id, id));
+    return serviceOrder || undefined;
+  }
+
+  async getServiceOrdersByAssignedStaff(staffId: string): Promise<ServiceOrder[]> {
+    return await db.select().from(serviceOrders).where(eq(serviceOrders.assignedStaffId, staffId));
+  }
+
+  async getServiceOrdersByStatus(status: string): Promise<ServiceOrder[]> {
+    return await db.select().from(serviceOrders).where(eq(serviceOrders.status, status as any));
+  }
+
+  async createServiceOrder(insertServiceOrder: InsertServiceOrder): Promise<ServiceOrder> {
+    const [serviceOrder] = await db
+      .insert(serviceOrders)
+      .values(insertServiceOrder)
+      .returning();
+    return serviceOrder;
+  }
+
+  async updateServiceOrder(id: string, updateData: Partial<InsertServiceOrder>): Promise<ServiceOrder> {
+    const [serviceOrder] = await db
+      .update(serviceOrders)
+      .set(updateData)
+      .where(eq(serviceOrders.id, id))
+      .returning();
+    return serviceOrder;
+  }
+
+  // Work Order methods
+  async getWorkOrders(): Promise<WorkOrder[]> {
+    return await db.select().from(workOrders);
+  }
+
+  async getWorkOrder(id: string): Promise<WorkOrder | undefined> {
+    const [workOrder] = await db.select().from(workOrders).where(eq(workOrders.id, id));
+    return workOrder || undefined;
+  }
+
+  async getWorkOrdersByStatus(status: string): Promise<WorkOrder[]> {
+    return await db.select().from(workOrders).where(eq(workOrders.status, status as any));
+  }
+
+  async createWorkOrder(insertWorkOrder: InsertWorkOrder): Promise<WorkOrder> {
+    const [workOrder] = await db
+      .insert(workOrders)
+      .values(insertWorkOrder)
+      .returning();
+    return workOrder;
+  }
+
+  async updateWorkOrder(id: string, updateData: Partial<InsertWorkOrder>): Promise<WorkOrder> {
+    const [workOrder] = await db
+      .update(workOrders)
+      .set(updateData)
+      .where(eq(workOrders.id, id))
+      .returning();
+    return workOrder;
+  }
+
+  // Service Request to Service Order junction methods
+  async linkServiceRequestToServiceOrder(serviceRequestId: string, serviceOrderId: string): Promise<ServiceRequestServiceOrder> {
+    const [link] = await db
+      .insert(serviceRequestServiceOrders)
+      .values({ serviceRequestId, serviceOrderId })
+      .returning();
+    return link;
+  }
+
+  async getServiceOrdersForRequest(serviceRequestId: string): Promise<ServiceOrder[]> {
+    const result = await db
+      .select({ serviceOrder: serviceOrders })
+      .from(serviceRequestServiceOrders)
+      .innerJoin(serviceOrders, eq(serviceRequestServiceOrders.serviceOrderId, serviceOrders.id))
+      .where(eq(serviceRequestServiceOrders.serviceRequestId, serviceRequestId));
+    return result.map(row => row.serviceOrder);
+  }
+
+  async getServiceRequestsForServiceOrder(serviceOrderId: string): Promise<ServiceRequest[]> {
+    const result = await db
+      .select({ serviceRequest: serviceRequests })
+      .from(serviceRequestServiceOrders)
+      .innerJoin(serviceRequests, eq(serviceRequestServiceOrders.serviceRequestId, serviceRequests.id))
+      .where(eq(serviceRequestServiceOrders.serviceOrderId, serviceOrderId));
+    return result.map(row => row.serviceRequest);
+  }
+
+  // Service Request to Work Order junction methods
+  async linkServiceRequestToWorkOrder(serviceRequestId: string, workOrderId: string): Promise<ServiceRequestWorkOrder> {
+    const [link] = await db
+      .insert(serviceRequestWorkOrders)
+      .values({ serviceRequestId, workOrderId })
+      .returning();
+    return link;
+  }
+
+  async getWorkOrdersForRequest(serviceRequestId: string): Promise<WorkOrder[]> {
+    const result = await db
+      .select({ workOrder: workOrders })
+      .from(serviceRequestWorkOrders)
+      .innerJoin(workOrders, eq(serviceRequestWorkOrders.workOrderId, workOrders.id))
+      .where(eq(serviceRequestWorkOrders.serviceRequestId, serviceRequestId));
+    return result.map(row => row.workOrder);
+  }
+
+  async getServiceRequestsForWorkOrder(workOrderId: string): Promise<ServiceRequest[]> {
+    const result = await db
+      .select({ serviceRequest: serviceRequests })
+      .from(serviceRequestWorkOrders)
+      .innerJoin(serviceRequests, eq(serviceRequestWorkOrders.serviceRequestId, serviceRequests.id))
+      .where(eq(serviceRequestWorkOrders.workOrderId, workOrderId));
+    return result.map(row => row.serviceRequest);
   }
 }
 

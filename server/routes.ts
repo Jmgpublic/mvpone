@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
-import { insertSiteSchema, insertSpaceTypeSchema, insertSpaceSchema, insertResidentSchema, insertLeaseSchema, insertFunderSchema, insertLeaseFunderSchema, insertRevenueEventSchema } from "@shared/schema";
+import { insertSiteSchema, insertSpaceTypeSchema, insertSpaceSchema, insertResidentSchema, insertLeaseSchema, insertFunderSchema, insertLeaseFunderSchema, insertRevenueEventSchema, insertServiceRequestSchema, insertServiceOrderSchema, insertWorkOrderSchema } from "@shared/schema";
 
 export function registerRoutes(app: Express): Server {
   // Authentication routes
@@ -242,6 +242,199 @@ export function registerRoutes(app: Express): Server {
     } catch (error) {
       console.error("Error creating lease with funding:", error);
       res.status(400).json({ message: "Failed to create lease with funding" });
+    }
+  });
+
+  // Service Request routes
+  app.get("/api/service-requests", async (req, res) => {
+    try {
+      const { residentId, spaceId, status } = req.query;
+      let serviceRequests;
+      
+      if (residentId) {
+        serviceRequests = await storage.getServiceRequestsByResident(residentId as string);
+      } else if (spaceId) {
+        serviceRequests = await storage.getServiceRequestsBySpace(spaceId as string);
+      } else if (status) {
+        serviceRequests = await storage.getServiceRequestsByStatus(status as string);
+      } else {
+        serviceRequests = await storage.getServiceRequests();
+      }
+      
+      res.json(serviceRequests);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch service requests" });
+    }
+  });
+
+  app.get("/api/service-requests/:id", async (req, res) => {
+    try {
+      const serviceRequest = await storage.getServiceRequest(req.params.id);
+      if (!serviceRequest) {
+        return res.status(404).json({ message: "Service request not found" });
+      }
+      res.json(serviceRequest);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch service request" });
+    }
+  });
+
+  app.post("/api/service-requests", async (req, res) => {
+    try {
+      const validatedData = insertServiceRequestSchema.parse(req.body);
+      const serviceRequest = await storage.createServiceRequest(validatedData);
+      res.status(201).json(serviceRequest);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid service request data" });
+    }
+  });
+
+  app.put("/api/service-requests/:id", async (req, res) => {
+    try {
+      const validatedData = insertServiceRequestSchema.partial().parse(req.body);
+      const serviceRequest = await storage.updateServiceRequest(req.params.id, validatedData);
+      res.json(serviceRequest);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid service request data" });
+    }
+  });
+
+  // Service Order routes
+  app.get("/api/service-orders", async (req, res) => {
+    try {
+      const { assignedStaffId, status } = req.query;
+      let serviceOrders;
+      
+      if (assignedStaffId) {
+        serviceOrders = await storage.getServiceOrdersByAssignedStaff(assignedStaffId as string);
+      } else if (status) {
+        serviceOrders = await storage.getServiceOrdersByStatus(status as string);
+      } else {
+        serviceOrders = await storage.getServiceOrders();
+      }
+      
+      res.json(serviceOrders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch service orders" });
+    }
+  });
+
+  app.get("/api/service-orders/:id", async (req, res) => {
+    try {
+      const serviceOrder = await storage.getServiceOrder(req.params.id);
+      if (!serviceOrder) {
+        return res.status(404).json({ message: "Service order not found" });
+      }
+      res.json(serviceOrder);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch service order" });
+    }
+  });
+
+  app.post("/api/service-orders", async (req, res) => {
+    try {
+      const validatedData = insertServiceOrderSchema.parse(req.body);
+      const serviceOrder = await storage.createServiceOrder(validatedData);
+      res.status(201).json(serviceOrder);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid service order data" });
+    }
+  });
+
+  app.put("/api/service-orders/:id", async (req, res) => {
+    try {
+      const validatedData = insertServiceOrderSchema.partial().parse(req.body);
+      const serviceOrder = await storage.updateServiceOrder(req.params.id, validatedData);
+      res.json(serviceOrder);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid service order data" });
+    }
+  });
+
+  // Work Order routes
+  app.get("/api/work-orders", async (req, res) => {
+    try {
+      const { status } = req.query;
+      let workOrders;
+      
+      if (status) {
+        workOrders = await storage.getWorkOrdersByStatus(status as string);
+      } else {
+        workOrders = await storage.getWorkOrders();
+      }
+      
+      res.json(workOrders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch work orders" });
+    }
+  });
+
+  app.get("/api/work-orders/:id", async (req, res) => {
+    try {
+      const workOrder = await storage.getWorkOrder(req.params.id);
+      if (!workOrder) {
+        return res.status(404).json({ message: "Work order not found" });
+      }
+      res.json(workOrder);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch work order" });
+    }
+  });
+
+  app.post("/api/work-orders", async (req, res) => {
+    try {
+      const validatedData = insertWorkOrderSchema.parse(req.body);
+      const workOrder = await storage.createWorkOrder(validatedData);
+      res.status(201).json(workOrder);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid work order data" });
+    }
+  });
+
+  app.put("/api/work-orders/:id", async (req, res) => {
+    try {
+      const validatedData = insertWorkOrderSchema.partial().parse(req.body);
+      const workOrder = await storage.updateWorkOrder(req.params.id, validatedData);
+      res.json(workOrder);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid work order data" });
+    }
+  });
+
+  // Service Request to Order linking routes
+  app.post("/api/service-requests/:serviceRequestId/service-orders/:serviceOrderId", async (req, res) => {
+    try {
+      const link = await storage.linkServiceRequestToServiceOrder(req.params.serviceRequestId, req.params.serviceOrderId);
+      res.status(201).json(link);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to link service request to service order" });
+    }
+  });
+
+  app.post("/api/service-requests/:serviceRequestId/work-orders/:workOrderId", async (req, res) => {
+    try {
+      const link = await storage.linkServiceRequestToWorkOrder(req.params.serviceRequestId, req.params.workOrderId);
+      res.status(201).json(link);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to link service request to work order" });
+    }
+  });
+
+  app.get("/api/service-requests/:id/service-orders", async (req, res) => {
+    try {
+      const serviceOrders = await storage.getServiceOrdersForRequest(req.params.id);
+      res.json(serviceOrders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch service orders for request" });
+    }
+  });
+
+  app.get("/api/service-requests/:id/work-orders", async (req, res) => {
+    try {
+      const workOrders = await storage.getWorkOrdersForRequest(req.params.id);
+      res.json(workOrders);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch work orders for request" });
     }
   });
 

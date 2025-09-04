@@ -1,4 +1,5 @@
 import { MessageSquare, User, CreditCard } from "lucide-react";
+import ServiceRequests from "./resident-portal/service-requests";
 
 export default function ResidentPortal() {
   return (
@@ -6,6 +7,11 @@ export default function ResidentPortal() {
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-secondary">Resident Portal Dashboard</h2>
         <p className="text-gray-600 mt-2">Resident-facing services and account management</p>
+      </div>
+      
+      {/* Service Requests - Full Width Priority */}
+      <div className="mb-6">
+        <ServiceRequests />
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
