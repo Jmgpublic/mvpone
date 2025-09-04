@@ -9,6 +9,7 @@ import Dashboard from "@/pages/dashboard";
 import AuthPage from "@/pages/auth-page";
 import SpaceRoster from "@/pages/space-roster";
 import LeaseEntry from "@/pages/lease-entry";
+import EditSiteRecord from "@/pages/edit-site-record";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -17,6 +18,7 @@ function Router() {
       <ProtectedRoute path="/" component={Dashboard} />
       <ProtectedRoute path="/space-roster" component={SpaceRoster} />
       <ProtectedRoute path="/lease-entry" component={LeaseEntry} />
+      <ProtectedRoute path="/edit-site-record" component={EditSiteRecord} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>

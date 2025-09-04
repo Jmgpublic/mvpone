@@ -18,6 +18,18 @@ export function registerRoutes(app: Express): Server {
     }
   });
 
+  app.get("/api/sites/:id", async (req, res) => {
+    try {
+      const site = await storage.getSite(req.params.id);
+      if (!site) {
+        return res.status(404).json({ message: "Site not found" });
+      }
+      res.json(site);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch site" });
+    }
+  });
+
   app.post("/api/sites", async (req, res) => {
     try {
       const validatedData = insertSiteSchema.parse(req.body);
