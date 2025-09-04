@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useSearch } from "wouter";
+import { useEffect } from "react";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { insertSiteSchema, type InsertSite, type Site } from "@shared/schema";
@@ -32,36 +33,36 @@ export default function EditSiteRecord() {
   const form = useForm<InsertSite>({
     resolver: zodResolver(insertSiteSchema),
     defaultValues: {
-      name: existingSite?.name || "",
-      address: existingSite?.address || "",
-      propertyNickname: existingSite?.propertyNickname || "",
-      propertyDescription: existingSite?.propertyDescription || "",
-      propertyDateAcquired: existingSite?.propertyDateAcquired 
-        ? new Date(existingSite.propertyDateAcquired).toISOString().split('T')[0] 
-        : "",
-      propertyValueAssessed: existingSite?.propertyValueAssessed || "",
-      propertyValueMortgageTotal: existingSite?.propertyValueMortgageTotal || "",
-      mortgagePaymentPrincipal: existingSite?.mortgagePaymentPrincipal || "",
-      mortgagePaymentInterest: existingSite?.mortgagePaymentInterest || "",
+      name: "",
+      address: "",
+      propertyNickname: "",
+      propertyDescription: "",
+      propertyDateAcquired: "",
+      propertyValueAssessed: "",
+      propertyValueMortgageTotal: "",
+      mortgagePaymentPrincipal: "",
+      mortgagePaymentInterest: "",
     },
   });
 
   // Update form values when existing site data loads
-  if (existingSite && !form.formState.isDirty) {
-    form.reset({
-      name: existingSite.name,
-      address: existingSite.address,
-      propertyNickname: existingSite.propertyNickname || "",
-      propertyDescription: existingSite.propertyDescription || "",
-      propertyDateAcquired: existingSite.propertyDateAcquired 
-        ? new Date(existingSite.propertyDateAcquired).toISOString().split('T')[0] 
-        : "",
-      propertyValueAssessed: existingSite.propertyValueAssessed || "",
-      propertyValueMortgageTotal: existingSite.propertyValueMortgageTotal || "",
-      mortgagePaymentPrincipal: existingSite.mortgagePaymentPrincipal || "",
-      mortgagePaymentInterest: existingSite.mortgagePaymentInterest || "",
-    });
-  }
+  useEffect(() => {
+    if (existingSite) {
+      form.reset({
+        name: existingSite.name,
+        address: existingSite.address,
+        propertyNickname: existingSite.propertyNickname || "",
+        propertyDescription: existingSite.propertyDescription || "",
+        propertyDateAcquired: existingSite.propertyDateAcquired 
+          ? new Date(existingSite.propertyDateAcquired).toISOString().split('T')[0] 
+          : "",
+        propertyValueAssessed: existingSite.propertyValueAssessed || "",
+        propertyValueMortgageTotal: existingSite.propertyValueMortgageTotal || "",
+        mortgagePaymentPrincipal: existingSite.mortgagePaymentPrincipal || "",
+        mortgagePaymentInterest: existingSite.mortgagePaymentInterest || "",
+      });
+    }
+  }, [existingSite, form]);
 
   // Create site mutation
   const createSiteMutation = useMutation({
