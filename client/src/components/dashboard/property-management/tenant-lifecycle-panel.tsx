@@ -25,40 +25,8 @@ export default function TenantLifecyclePanel() {
 
         {/* Waitlist Management Panel */}
         <TabsContent value="waitlist" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             
-            {/* Waitlist Overview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Users className="w-5 h-5" />
-                  <span>Waitlist Overview</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600">24</div>
-                    <div className="text-sm text-gray-600">Total Applications</div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Pending Review</span>
-                      <Badge variant="secondary">8</Badge>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Under Review</span>
-                      <Badge variant="outline">6</Badge>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Approved</span>
-                      <Badge className="bg-green-500">10</Badge>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Client Registration */}
             <Card>
               <CardHeader>

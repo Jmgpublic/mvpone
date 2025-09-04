@@ -132,33 +132,7 @@ export default function MessagingPanel() {
 
         {/* Announcements */}
         <TabsContent value="announcements" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Quick Create and Stats */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Bell className="w-5 h-5" />
-                  <span>Announcements Overview</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-3 gap-4 text-center">
-                  <div>
-                    <div className="text-2xl font-bold text-green-600">{getMessagesByType('announcement').filter(m => m.status === 'active').length}</div>
-                    <div className="text-sm text-gray-600">Active</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-yellow-600">{getMessagesByType('announcement').filter(m => m.status === 'scheduled').length}</div>
-                    <div className="text-sm text-gray-600">Scheduled</div>
-                  </div>
-                  <div>
-                    <div className="text-2xl font-bold text-gray-600">{getMessagesByType('announcement').filter(m => m.status === 'draft').length}</div>
-                    <div className="text-sm text-gray-600">Drafts</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
+          <div className="space-y-6">
             {/* Recent Announcements */}
             <Card>
               <CardHeader>
