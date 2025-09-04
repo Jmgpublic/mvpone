@@ -146,17 +146,17 @@ export default function SiteDefinitionPanel() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Building className="w-5 h-5" />
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center space-x-2 text-lg">
+                <Building className="w-4 h-4" />
                 <span>Sites</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-3">
               {isLoading ? (
-                <div className="text-center py-8">Loading sites...</div>
+                <div className="text-center py-6">Loading sites...</div>
               ) : (
                 <Table>
                   <TableHeader>
@@ -176,12 +176,12 @@ export default function SiteDefinitionPanel() {
                       </TableRow>
                     ) : (
                       sites.map((site) => (
-                        <TableRow key={site.id}>
+                        <TableRow key={site.id} className="h-10">
                           <TableCell className="font-medium">{site.name}</TableCell>
                           <TableCell>{site.address}</TableCell>
                           <TableCell>{new Date(site.createdAt).toLocaleDateString()}</TableCell>
                           <TableCell>
-                            <div className="flex space-x-2">
+                            <div className="flex space-x-1">
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -213,13 +213,13 @@ export default function SiteDefinitionPanel() {
           
           {/* Add/Edit Site Form */}
           <Card>
-            <CardHeader>
-              <CardTitle>{editingSite ? "Edit Site" : "Add New Site"}</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">{editingSite ? "Edit Site" : "Add New Site"}</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="pt-3">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <FormField
                       control={form.control}
                       name="name"
@@ -227,7 +227,7 @@ export default function SiteDefinitionPanel() {
                         <FormItem>
                           <FormLabel>Site Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter site name" {...field} data-testid="input-site-name" />
+                            <Input placeholder="Enter site name" {...field} data-testid="input-site-name" className="h-9" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -240,14 +240,14 @@ export default function SiteDefinitionPanel() {
                         <FormItem>
                           <FormLabel>Address</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter site address" {...field} data-testid="input-site-address" />
+                            <Input placeholder="Enter site address" {...field} data-testid="input-site-address" className="h-9" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
                   </div>
-                  <div className="flex space-x-3">
+                  <div className="flex space-x-2">
                     <Button 
                       type="submit" 
                       disabled={createSiteMutation.isPending || updateSiteMutation.isPending}
@@ -293,8 +293,8 @@ export default function SiteDefinitionPanel() {
           {/* Spaces Table - Only shown when editing a site and "Show Spaces" is clicked */}
           {editingSite && showSpaces && (
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center justify-between">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center justify-between text-lg">
                   <span>Spaces for {editingSite.name} ({siteSpaces.length} {siteSpaces.length === 1 ? 'space' : 'spaces'})</span>
                   <Button
                     size="sm"
@@ -306,9 +306,9 @@ export default function SiteDefinitionPanel() {
                   </Button>
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-3">
                 {/* Filter Controls */}
-                <div className="flex items-center gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <div className="flex items-center gap-4 mb-3 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
                   <div className="flex items-center gap-2">
                     <label className="text-sm font-medium">Filter by Type:</label>
                     <Select value={selectedSpaceType} onValueChange={setSelectedSpaceType}>
@@ -345,7 +345,7 @@ export default function SiteDefinitionPanel() {
                   <TableBody>
                     {siteSpaces.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={3} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={3} className="text-center text-muted-foreground py-4">
                           No spaces found for this site. Create spaces in the Admin Analytics panel.
                         </TableCell>
                       </TableRow>
@@ -353,7 +353,7 @@ export default function SiteDefinitionPanel() {
                       siteSpaces.map((space) => (
                         <TableRow
                           key={space.id}
-                          className={`cursor-pointer transition-colors ${
+                          className={`h-10 cursor-pointer transition-colors ${
                             selectedSpace?.id === space.id ? "bg-muted" : ""
                           }`}
                           onClick={() => setSelectedSpace(space)}
