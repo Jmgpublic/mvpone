@@ -20,6 +20,7 @@ export default function SiteDefinitionPanel() {
   const [editingSite, setEditingSite] = useState<Site | null>(null);
   const [showSpaces, setShowSpaces] = useState<boolean>(false);
   const [selectedSpace, setSelectedSpace] = useState<Space | null>(null);
+  const [selectedSpaceType, setSelectedSpaceType] = useState<string>("all");
   const { toast } = useToast();
 
   // Fetch sites data
@@ -42,8 +43,12 @@ export default function SiteDefinitionPanel() {
   // Filter spaces for the currently editing site
   const siteSpaces = useMemo(() => {
     if (!editingSite || !showSpaces) return [];
-    return spaces.filter(space => space.siteId === editingSite.id);
-  }, [spaces, editingSite, showSpaces]);
+    return spaces.filter(space => {
+      const siteMatch = space.siteId === editingSite.id;
+      const typeMatch = selectedSpaceType === "all" || space.spaceTypeId === selectedSpaceType;
+      return siteMatch && typeMatch;
+    });
+  }, [spaces, editingSite, showSpaces, selectedSpaceType]);
 
   // Get space type name for a space
   const getSpaceTypeName = (spaceTypeId: string) => {
@@ -120,6 +125,7 @@ export default function SiteDefinitionPanel() {
     setEditingSite(site);
     setShowSpaces(false); // Reset spaces view when switching sites
     setSelectedSpace(null);
+    setSelectedSpaceType("all"); // Reset space type filter
     form.reset({
       name: site.name,
       address: site.address,
@@ -130,6 +136,7 @@ export default function SiteDefinitionPanel() {
     setEditingSite(null);
     setShowSpaces(false);
     setSelectedSpace(null);
+    setSelectedSpaceType("all");
     form.reset();
   };
 
@@ -312,6 +319,33 @@ export default function SiteDefinitionPanel() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
+                {/* Filter Controls */}
+                <div className="flex items-center gap-4 mb-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium">Filter by Type:</label>
+                    <Select value={selectedSpaceType} onValueChange={setSelectedSpaceType}>
+                      <SelectTrigger className="w-48" data-testid="select-space-type-filter">
+                        <SelectValue placeholder="All Types" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Types</SelectItem>
+                        {spaceTypes.map((spaceType) => (
+                          <SelectItem key={spaceType.id} value={spaceType.id}>
+                            {spaceType.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSelectedSpaceType("all")}
+                    data-testid="button-clear-filter"
+                  >
+                    Clear Filter
+                  </Button>
+                </div>
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -361,9 +395,9 @@ export default function SiteDefinitionPanel() {
                     </div>
                     <div>
                       <label className="text-sm font-medium text-muted-foreground">Type</label>
-                      <p>
+                      <div>
                         <Badge variant="secondary">{getSpaceTypeName(selectedSpace.spaceTypeId)}</Badge>
-                      </p>
+                      </div>
                     </div>
                   </div>
                 </CardFooter>
