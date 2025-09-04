@@ -95,13 +95,18 @@ export default function ServiceRequestManagement() {
   // Fetch all service requests
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
     queryKey: ['/api/service-requests'],
-    queryFn: () => apiRequest('/api/service-requests', 'GET'),
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/service-requests');
+      return await response.json();
+    },
   });
 
   // Update service request status mutation
   const updateStatusMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: StatusUpdate }) => 
-      apiRequest(`/api/service-requests/${id}`, 'PUT', data),
+    mutationFn: async ({ id, data }: { id: string; data: StatusUpdate }) => {
+      const response = await apiRequest('PUT', `/api/service-requests/${id}`, data);
+      return await response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/service-requests'] });
       toast({
@@ -121,11 +126,14 @@ export default function ServiceRequestManagement() {
 
   // Create service order mutation
   const createServiceOrderMutation = useMutation({
-    mutationFn: (data: ServiceOrderForm) => apiRequest('/api/service-orders', 'POST', data),
+    mutationFn: async (data: ServiceOrderForm) => {
+      const response = await apiRequest('POST', '/api/service-orders', data);
+      return await response.json();
+    },
     onSuccess: (serviceOrder: any) => {
       if (selectedRequest && serviceOrder?.id) {
         // Link the service request to the service order
-        apiRequest(`/api/service-requests/${selectedRequest.id}/service-orders/${serviceOrder.id}`, 'POST', {});
+        apiRequest('POST', `/api/service-requests/${selectedRequest.id}/service-orders/${serviceOrder.id}`, {});
       }
       queryClient.invalidateQueries({ queryKey: ['/api/service-requests'] });
       toast({
@@ -146,11 +154,14 @@ export default function ServiceRequestManagement() {
 
   // Create work order mutation
   const createWorkOrderMutation = useMutation({
-    mutationFn: (data: WorkOrderForm) => apiRequest('/api/work-orders', 'POST', data),
+    mutationFn: async (data: WorkOrderForm) => {
+      const response = await apiRequest('POST', '/api/work-orders', data);
+      return await response.json();
+    },
     onSuccess: (workOrder: any) => {
       if (selectedRequest && workOrder?.id) {
         // Link the service request to the work order
-        apiRequest(`/api/service-requests/${selectedRequest.id}/work-orders/${workOrder.id}`, 'POST', {});
+        apiRequest('POST', `/api/service-requests/${selectedRequest.id}/work-orders/${workOrder.id}`, {});
       }
       queryClient.invalidateQueries({ queryKey: ['/api/service-requests'] });
       toast({

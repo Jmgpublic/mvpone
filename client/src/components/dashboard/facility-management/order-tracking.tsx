@@ -90,19 +90,27 @@ export default function OrderTracking() {
   // Fetch service orders
   const { data: serviceOrders = [], isLoading: isLoadingServiceOrders } = useQuery<ServiceOrder[]>({
     queryKey: ['/api/service-orders'],
-    queryFn: () => apiRequest('/api/service-orders', 'GET'),
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/service-orders');
+      return await response.json();
+    },
   });
 
   // Fetch work orders
   const { data: workOrders = [], isLoading: isLoadingWorkOrders } = useQuery<WorkOrder[]>({
     queryKey: ['/api/work-orders'],
-    queryFn: () => apiRequest('/api/work-orders', 'GET'),
+    queryFn: async () => {
+      const response = await apiRequest('GET', '/api/work-orders');
+      return await response.json();
+    },
   });
 
   // Update service order mutation
   const updateServiceOrderMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: ServiceOrderUpdate }) => 
-      apiRequest(`/api/service-orders/${id}`, 'PUT', data),
+    mutationFn: async ({ id, data }: { id: string; data: ServiceOrderUpdate }) => {
+      const response = await apiRequest('PUT', `/api/service-orders/${id}`, data);
+      return await response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/service-orders'] });
       toast({
@@ -122,8 +130,10 @@ export default function OrderTracking() {
 
   // Update work order mutation
   const updateWorkOrderMutation = useMutation({
-    mutationFn: ({ id, data }: { id: string; data: WorkOrderUpdate }) => 
-      apiRequest(`/api/work-orders/${id}`, 'PUT', data),
+    mutationFn: async ({ id, data }: { id: string; data: WorkOrderUpdate }) => {
+      const response = await apiRequest('PUT', `/api/work-orders/${id}`, data);
+      return await response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/work-orders'] });
       toast({

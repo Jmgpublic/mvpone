@@ -77,12 +77,18 @@ export default function ServiceRequests() {
   // Fetch service requests for current resident
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
     queryKey: ['/api/service-requests', 'resident', currentResidentId],
-    queryFn: () => apiRequest(`/api/service-requests?residentId=${currentResidentId}`, 'GET'),
+    queryFn: async () => {
+      const response = await apiRequest('GET', `/api/service-requests?residentId=${currentResidentId}`);
+      return await response.json();
+    },
   });
 
   // Create service request mutation
   const createServiceRequestMutation = useMutation({
-    mutationFn: (data: ServiceRequestForm) => apiRequest('/api/service-requests', 'POST', data),
+    mutationFn: async (data: ServiceRequestForm) => {
+      const response = await apiRequest('POST', '/api/service-requests', data);
+      return await response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/service-requests'] });
       setShowCreateForm(false);
