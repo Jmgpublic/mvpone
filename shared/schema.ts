@@ -23,6 +23,13 @@ export const sites = pgTable("sites", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
   address: text("address").notNull(),
+  propertyNickname: text("property_nickname"),
+  propertyDescription: text("property_description"),
+  propertyDateAcquired: timestamp("property_date_acquired"),
+  propertyValueAssessed: decimal("property_value_assessed", { precision: 10, scale: 2 }),
+  propertyValueMortgageTotal: decimal("property_value_mortgage_total", { precision: 10, scale: 2 }),
+  mortgagePaymentPrincipal: decimal("mortgage_payment_principal", { precision: 10, scale: 2 }),
+  mortgagePaymentInterest: decimal("mortgage_payment_interest", { precision: 10, scale: 2 }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
@@ -186,6 +193,13 @@ export const insertSiteSchema = createInsertSchema(sites).omit({
 }).extend({
   name: z.string().min(1, "Site name is required"),
   address: z.string().min(1, "Address is required"),
+  propertyNickname: z.string().optional(),
+  propertyDescription: z.string().optional(),
+  propertyDateAcquired: z.string().optional(),
+  propertyValueAssessed: z.string().optional(),
+  propertyValueMortgageTotal: z.string().optional(),
+  mortgagePaymentPrincipal: z.string().optional(),
+  mortgagePaymentInterest: z.string().optional(),
 });
 
 export const insertSpaceSchema = createInsertSchema(spaces).omit({

@@ -62,6 +62,13 @@ export default function SiteDefinitionPanel() {
     defaultValues: {
       name: "",
       address: "",
+      propertyNickname: "",
+      propertyDescription: "",
+      propertyDateAcquired: "",
+      propertyValueAssessed: "",
+      propertyValueMortgageTotal: "",
+      mortgagePaymentPrincipal: "",
+      mortgagePaymentInterest: "",
     },
   });
 
@@ -128,6 +135,13 @@ export default function SiteDefinitionPanel() {
     form.reset({
       name: site.name,
       address: site.address,
+      propertyNickname: site.propertyNickname || "",
+      propertyDescription: site.propertyDescription || "",
+      propertyDateAcquired: site.propertyDateAcquired ? new Date(site.propertyDateAcquired).toISOString().split('T')[0] : "",
+      propertyValueAssessed: site.propertyValueAssessed || "",
+      propertyValueMortgageTotal: site.propertyValueMortgageTotal || "",
+      mortgagePaymentPrincipal: site.mortgagePaymentPrincipal || "",
+      mortgagePaymentInterest: site.mortgagePaymentInterest || "",
     });
   };
 
@@ -163,6 +177,8 @@ export default function SiteDefinitionPanel() {
                     <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Address</TableHead>
+                      <TableHead>Nickname</TableHead>
+                      <TableHead>Assessed Value</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead className="w-[100px]">Actions</TableHead>
                     </TableRow>
@@ -170,7 +186,7 @@ export default function SiteDefinitionPanel() {
                   <TableBody>
                     {sites.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center text-muted-foreground">
+                        <TableCell colSpan={6} className="text-center text-muted-foreground">
                           No sites found. Create your first site below.
                         </TableCell>
                       </TableRow>
@@ -179,6 +195,8 @@ export default function SiteDefinitionPanel() {
                         <TableRow key={site.id} className="h-10">
                           <TableCell className="font-medium">{site.name}</TableCell>
                           <TableCell>{site.address}</TableCell>
+                          <TableCell>{site.propertyNickname || "-"}</TableCell>
+                          <TableCell>{site.propertyValueAssessed ? `$${parseFloat(site.propertyValueAssessed).toLocaleString()}` : "-"}</TableCell>
                           <TableCell>{new Date(site.createdAt).toLocaleDateString()}</TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
@@ -241,6 +259,99 @@ export default function SiteDefinitionPanel() {
                           <FormLabel>Address</FormLabel>
                           <FormControl>
                             <Input placeholder="Enter site address" {...field} data-testid="input-site-address" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="propertyNickname"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Property Nickname</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Space nickname" {...field} data-testid="input-property-nickname" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="propertyDateAcquired"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Date Acquired</FormLabel>
+                          <FormControl>
+                            <Input type="date" placeholder="Property acquisition date" {...field} data-testid="input-property-date-acquired" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="propertyValueAssessed"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Assessed Value</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="0.00" {...field} data-testid="input-property-value-assessed" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="propertyValueMortgageTotal"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Original Mortgage Amount</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="0.00" {...field} data-testid="input-property-value-mortgage-total" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="mortgagePaymentPrincipal"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Principal Payment</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="0.00" {...field} data-testid="input-mortgage-payment-principal" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="mortgagePaymentInterest"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Interest Payment</FormLabel>
+                          <FormControl>
+                            <Input type="number" step="0.01" placeholder="0.00" {...field} data-testid="input-mortgage-payment-interest" className="h-9" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <FormField
+                      control={form.control}
+                      name="propertyDescription"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Property Description</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Extended description" {...field} data-testid="input-property-description" className="h-9" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
