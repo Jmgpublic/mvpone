@@ -45,27 +45,26 @@ export default function PropertyManagement() {
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-gray-600 mb-4">Maintain site records, manage spaces, and handle site documentation</p>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-4">
               <div className="flex items-center text-sm text-gray-600">
                 <Edit className="w-4 h-4 mr-2" />
-                <span>Maintain Site Record</span>
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <FileText className="w-4 h-4 mr-2" />
-                <span>Site Table - CRUD</span>
+                <span>Maintain Site Records</span>
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <ClipboardList className="w-4 h-4 mr-2" />
-                <span>Spaces</span>
+                <span>Manage Site Spaces</span>
+              </div>
+              <div className="flex items-center text-sm text-gray-600">
+                <FileText className="w-4 h-4 mr-2" />
+                <span>Update Site Documentation</span>
               </div>
             </div>
             <Button 
               className="w-full mt-4" 
-              onClick={() => setActivePanel('site-definition')}
-              data-testid="button-site-definition"
+              onClick={() => window.location.href = '/edit-site-record'}
+              data-testid="button-define-site"
             >
-              Manage Sites
+              Define Site
             </Button>
           </CardContent>
         </Card>
