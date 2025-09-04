@@ -90,11 +90,13 @@ export default function OrderTracking() {
   // Fetch service orders
   const { data: serviceOrders = [], isLoading: isLoadingServiceOrders } = useQuery<ServiceOrder[]>({
     queryKey: ['/api/service-orders'],
+    queryFn: () => fetch('/api/service-orders').then(res => res.json()),
   });
 
   // Fetch work orders
   const { data: workOrders = [], isLoading: isLoadingWorkOrders } = useQuery<WorkOrder[]>({
     queryKey: ['/api/work-orders'],
+    queryFn: () => fetch('/api/work-orders').then(res => res.json()),
   });
 
   // Update service order mutation

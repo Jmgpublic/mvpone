@@ -95,6 +95,7 @@ export default function ServiceRequestManagement() {
   // Fetch all service requests
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
     queryKey: ['/api/service-requests'],
+    queryFn: () => fetch('/api/service-requests').then(res => res.json()),
   });
 
   // Update service request status mutation
@@ -121,8 +122,8 @@ export default function ServiceRequestManagement() {
   // Create service order mutation
   const createServiceOrderMutation = useMutation({
     mutationFn: (data: ServiceOrderForm) => apiRequest('/api/service-orders', 'POST', data),
-    onSuccess: (serviceOrder) => {
-      if (selectedRequest) {
+    onSuccess: (serviceOrder: any) => {
+      if (selectedRequest && serviceOrder?.id) {
         // Link the service request to the service order
         apiRequest(`/api/service-requests/${selectedRequest.id}/service-orders/${serviceOrder.id}`, 'POST', {});
       }
@@ -146,8 +147,8 @@ export default function ServiceRequestManagement() {
   // Create work order mutation
   const createWorkOrderMutation = useMutation({
     mutationFn: (data: WorkOrderForm) => apiRequest('/api/work-orders', 'POST', data),
-    onSuccess: (workOrder) => {
-      if (selectedRequest) {
+    onSuccess: (workOrder: any) => {
+      if (selectedRequest && workOrder?.id) {
         // Link the service request to the work order
         apiRequest(`/api/service-requests/${selectedRequest.id}/work-orders/${workOrder.id}`, 'POST', {});
       }
