@@ -116,7 +116,6 @@ export default function SpaceRoster() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Space GUID</TableHead>
                 <TableHead>Site</TableHead>
                 <TableHead>Description</TableHead>
                 <TableHead>Type</TableHead>
@@ -125,7 +124,7 @@ export default function SpaceRoster() {
             <TableBody>
               {filteredSpaces.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-muted-foreground">
+                  <TableCell colSpan={3} className="text-center text-muted-foreground">
                     No spaces found matching the selected criteria.
                   </TableCell>
                 </TableRow>
@@ -139,7 +138,6 @@ export default function SpaceRoster() {
                     onClick={() => setSelectedSpace(space)}
                     data-testid={`row-space-${space.id}`}
                   >
-                    <TableCell className="font-mono text-sm">{space.id}</TableCell>
                     <TableCell>{getSiteName(space.siteId)}</TableCell>
                     <TableCell>{space.identifier}</TableCell>
                     <TableCell>
