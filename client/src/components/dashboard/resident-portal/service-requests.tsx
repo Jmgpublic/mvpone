@@ -70,9 +70,9 @@ export default function ServiceRequests() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // For demo purposes, using placeholder IDs - in real app, get from user session
-  const currentResidentId = "demo-resident-id";
-  const currentSpaceId = "demo-space-id";
+  // For demo purposes, using actual IDs from database - in real app, get from user session
+  const currentResidentId = "test-resident-id";
+  const currentSpaceId = "f49c0d19-774a-47ae-96d7-e2e981ad5304";
 
   // Fetch service requests for current resident
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
