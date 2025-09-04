@@ -9,7 +9,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Edit, Trash2, Building, Home } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -148,22 +147,11 @@ export default function SiteDefinitionPanel() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-2xl font-bold text-gray-900">Site Definition</h3>
-      </div>
-
-      <Tabs defaultValue="site-management" className="w-full">
-        <TabsList className="grid w-full grid-cols-1">
-          <TabsTrigger value="site-management">Site Management</TabsTrigger>
-        </TabsList>
-
-        {/* Site Management - Combined CRUD and Form */}
-        <TabsContent value="site-management" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Building className="w-5 h-5" />
-                <span>Site Management</span>
+                <span>Sites</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -404,9 +392,6 @@ export default function SiteDefinitionPanel() {
               )}
             </Card>
           )}
-        </TabsContent>
-
-      </Tabs>
     </div>
   );
 }
