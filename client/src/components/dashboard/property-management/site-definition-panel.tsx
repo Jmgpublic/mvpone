@@ -194,7 +194,7 @@ export default function SiteDefinitionPanel() {
                       sites.map((site) => (
                         <TableRow key={site.id} className="h-10">
                           <TableCell className="font-medium">{site.name}</TableCell>
-                          <TableCell>{site.address}</TableCell>
+                          <TableCell>{site.address.length > 10 ? `${site.address.substring(0, 10)}...` : site.address}</TableCell>
                           <TableCell>{site.propertyNickname || "-"}</TableCell>
                           <TableCell>{site.propertyValueAssessed ? `$${parseFloat(site.propertyValueAssessed).toLocaleString()}` : "-"}</TableCell>
                           <TableCell>{new Date(site.createdAt).toLocaleDateString()}</TableCell>
