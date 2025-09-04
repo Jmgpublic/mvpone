@@ -95,7 +95,7 @@ export default function ServiceRequestManagement() {
   // Fetch all service requests
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
     queryKey: ['/api/service-requests'],
-    queryFn: () => fetch('/api/service-requests').then(res => res.json()),
+    queryFn: () => apiRequest('/api/service-requests', 'GET'),
   });
 
   // Update service request status mutation

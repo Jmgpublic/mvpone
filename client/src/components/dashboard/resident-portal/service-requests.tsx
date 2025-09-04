@@ -77,7 +77,7 @@ export default function ServiceRequests() {
   // Fetch service requests for current resident
   const { data: serviceRequests = [], isLoading } = useQuery<ServiceRequest[]>({
     queryKey: ['/api/service-requests', 'resident', currentResidentId],
-    queryFn: () => fetch(`/api/service-requests?residentId=${currentResidentId}`).then(res => res.json()),
+    queryFn: () => apiRequest(`/api/service-requests?residentId=${currentResidentId}`, 'GET'),
   });
 
   // Create service request mutation
