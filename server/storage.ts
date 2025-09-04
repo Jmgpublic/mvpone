@@ -149,17 +149,29 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createSite(insertSite: InsertSite): Promise<Site> {
+    // Convert string dates to Date objects for database insertion
+    const dbInsertData = {
+      ...insertSite,
+      propertyDateAcquired: insertSite.propertyDateAcquired ? new Date(insertSite.propertyDateAcquired) : null,
+    };
+    
     const [site] = await db
       .insert(sites)
-      .values(insertSite)
+      .values(dbInsertData)
       .returning();
     return site;
   }
 
   async updateSite(id: string, updateData: Partial<InsertSite>): Promise<Site> {
+    // Convert string dates to Date objects for database update
+    const dbUpdateData = {
+      ...updateData,
+      propertyDateAcquired: updateData.propertyDateAcquired ? new Date(updateData.propertyDateAcquired) : undefined,
+    };
+    
     const [site] = await db
       .update(sites)
-      .set(updateData)
+      .set(dbUpdateData)
       .where(eq(sites.id, id))
       .returning();
     return site;
