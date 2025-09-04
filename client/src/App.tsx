@@ -10,6 +10,7 @@ import AuthPage from "@/pages/auth-page";
 import SpaceRoster from "@/pages/space-roster";
 import LeaseEntry from "@/pages/lease-entry";
 import EditSiteRecord from "@/pages/edit-site-record";
+import SiteRoster from "@/pages/site-roster";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
       <ProtectedRoute path="/space-roster" component={SpaceRoster} />
       <ProtectedRoute path="/lease-entry" component={LeaseEntry} />
       <ProtectedRoute path="/edit-site-record" component={EditSiteRecord} />
+      <ProtectedRoute path="/site-roster" component={SiteRoster} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
