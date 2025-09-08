@@ -62,7 +62,7 @@ export default function EditSiteRecord() {
         mortgagePaymentInterest: existingSite.mortgagePaymentInterest || "",
       });
     }
-  }, [existingSite, form]);
+  }, [existingSite]); // Remove form from dependency array
 
   // Create site mutation
   const createSiteMutation = useMutation({
