@@ -52,20 +52,38 @@ export default function PropertyManagement() {
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <ClipboardList className="w-4 h-4 mr-2" />
-                <span>Manage Site Spaces</span>
+                <span>Manage Spaces Roster</span>
               </div>
               <div className="flex items-center text-sm text-gray-600">
                 <FileText className="w-4 h-4 mr-2" />
                 <span>Update Site Documentation</span>
               </div>
             </div>
-            <Button 
-              className="w-full mt-4" 
-              onClick={() => window.location.href = '/edit-site-record'}
-              data-testid="button-define-site"
-            >
-              Define Site
-            </Button>
+            <div className="space-y-2">
+              <Button 
+                className="w-full" 
+                onClick={() => window.location.href = '/edit-site-record'}
+                data-testid="button-define-site"
+              >
+                Define Site
+              </Button>
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={() => window.location.href = '/space-roster'}
+                data-testid="button-manage-space-roster"
+              >
+                Manage Space Roster
+              </Button>
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={() => setActivePanel('documentation')}
+                data-testid="button-update-documentation"
+              >
+                Update Site Documentation
+              </Button>
+            </div>
           </CardContent>
         </Card>
 
