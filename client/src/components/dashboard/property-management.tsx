@@ -5,11 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import SiteDefinitionPanel from "./property-management/site-definition-panel";
-import DocumentationPanel from "./property-management/documentation-panel";
 import MessagingPanel from "./property-management/messaging-panel";
 import TenantLifecyclePanel from "./property-management/tenant-lifecycle-panel";
 
-type ActivePanel = 'overview' | 'site-definition' | 'documentation' | 'messaging' | 'tenant-lifecycle';
+type ActivePanel = 'overview' | 'site-definition' | 'messaging' | 'tenant-lifecycle';
 
 export default function PropertyManagement() {
   const [activePanel, setActivePanel] = useState<ActivePanel>('overview');
@@ -18,8 +17,6 @@ export default function PropertyManagement() {
     switch (activePanel) {
       case 'site-definition':
         return <SiteDefinitionPanel />;
-      case 'documentation':
-        return <DocumentationPanel />;
       case 'messaging':
         return <MessagingPanel />;
       case 'tenant-lifecycle':
@@ -87,42 +84,7 @@ export default function PropertyManagement() {
           </CardContent>
         </Card>
 
-        {/* Documentation and Formage Panel */}
-        <Card className="cursor-pointer hover:shadow-md transition-shadow">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center space-x-2">
-                <FileText className="w-5 h-5" />
-                <span>Documentation & Formage</span>
-              </CardTitle>
-              <Badge variant="secondary">3 Components</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Manage administrative forms, onboarding checklists, and legal disclosures</p>
-            <div className="space-y-2">
-              <div className="flex items-center text-sm text-gray-600">
-                <FileCheck className="w-4 h-4 mr-2" />
-                <span>Admin Formage</span>
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <ClipboardList className="w-4 h-4 mr-2" />
-                <span>Onboarding Checklist</span>
-              </div>
-              <div className="flex items-center text-sm text-gray-600">
-                <FileText className="w-4 h-4 mr-2" />
-                <span>Onboarding Disclosures</span>
-              </div>
-            </div>
-            <Button 
-              className="w-full mt-4" 
-              onClick={() => setActivePanel('documentation')}
-              data-testid="button-documentation"
-            >
-              Manage Documents
-            </Button>
-          </CardContent>
-        </Card>
+        
 
         {/* Messaging Panel */}
         <Card className="cursor-pointer hover:shadow-md transition-shadow">
