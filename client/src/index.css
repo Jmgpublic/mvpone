@@ -4,7 +4,7 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0 0% 100%);
+  --background: hsl(249.78, 100%, 81.96%);
   --foreground: hsl(210 25% 7.8431%);
   --card: hsl(180 6.6667% 97.0588%);
   --card-foreground: hsl(210 25% 7.8431%);
@@ -14,7 +14,7 @@
   --primary-foreground: hsl(0 0% 100%);
   --secondary: hsl(210 10% 26%);
   --secondary-foreground: hsl(0 0% 100%);
-  --muted: hsl(240 1.9608% 90%);
+  --muted: hsl(210, 100%, 70.98%);
   --muted-foreground: hsl(210 25% 7.8431%);
   --accent: hsl(122 39% 49%);
   --accent-foreground: hsl(0 0% 100%);
