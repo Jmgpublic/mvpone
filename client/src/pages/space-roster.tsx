@@ -141,7 +141,9 @@ export default function SpaceRoster() {
                     <TableCell>{getSiteName(space.siteId)}</TableCell>
                     <TableCell>{space.identifier}</TableCell>
                     <TableCell>
-                      <Badge variant="secondary">{getSpaceTypeName(space.spaceTypeId)}</Badge>
+                      <div>
+                        <Badge variant="secondary">{getSpaceTypeName(space.spaceTypeId)}</Badge>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))
@@ -153,8 +155,16 @@ export default function SpaceRoster() {
 
       {/* Footer - Space Details */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle>Space Details</CardTitle>
+          <Button
+            onClick={() => window.location.href = '/dashboard?panel=admin-analytics'}
+            className="ml-auto"
+            data-testid="button-create-space"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Create Space
+          </Button>
         </CardHeader>
         <CardContent>
           {selectedSpace ? (
@@ -170,9 +180,9 @@ export default function SpaceRoster() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Type</label>
-                  <p>
+                  <div className="mt-1">
                     <Badge variant="secondary">{getSpaceTypeName(selectedSpace.spaceTypeId)}</Badge>
-                  </p>
+                  </div>
                 </div>
               </div>
               <div className="space-y-3">
